@@ -1,0 +1,3148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laboratório Interativo de Progressões • Versão Profissional</title>
+  <meta name="description" content="Laboratório offline profissional para P.A., P.G., P.H., análise automática, comparação seletiva e quiz." />
+  <style>
+:root{
+  --bg:#09111a;
+  --bg-elev:#0f1824;
+  --bg-soft:#141f2d;
+  --surface:#ffffff;
+  --surface-soft:#f7fbff;
+  --surface-muted:#eef4fa;
+  --text:#102033;
+  --text-soft:#42546a;
+  --line:#d8e4f0;
+  --primary:#1459d9;
+  --primary-strong:#0f49b5;
+  --primary-soft:#e8f0ff;
+  --accent:#0c9bb4;
+  --success:#0b7a4b;
+  --warn:#925d00;
+  --danger:#a7263d;
+  --ph:#7b4dd8;
+  --ph-soft:#f2ebff;
+  --shadow:0 18px 40px rgba(16,32,51,.08);
+  --shadow-soft:0 10px 24px rgba(16,32,51,.05);
+  --radius-xl:24px;
+  --radius-lg:18px;
+  --radius-md:14px;
+  --radius-sm:10px;
+  --shell:min(1360px, calc(100vw - 32px));
+  --transition:180ms ease;
+  --focus:0 0 0 4px rgba(20,89,217,.16);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(circle at top right, rgba(20,89,217,.10), transparent 28%),
+    linear-gradient(180deg, #f4f8fc 0%, #eef3f9 100%);
+}
+img,canvas{max-width:100%;display:block}
+button,input,textarea,select{font:inherit}
+
+.skip-link{
+  position:absolute;
+  left:16px;
+  top:-48px;
+  z-index:1000;
+  background:#fff;
+  color:var(--primary);
+  padding:10px 14px;
+  border-radius:999px;
+  box-shadow:var(--shadow);
+  text-decoration:none;
+  transition:top var(--transition);
+}
+.skip-link:focus{top:16px}
+
+.shell{width:var(--shell);margin:0 auto}
+.site-header{
+  background:linear-gradient(135deg, rgba(255,255,255,.95), rgba(245,250,255,.90));
+  border-bottom:1px solid rgba(16,32,51,.08);
+  position:static;
+  box-shadow:0 10px 24px rgba(16,32,51,.04);
+}
+.header-shell{
+  padding:28px 0 22px;
+  display:grid;
+  gap:22px;
+}
+.brand{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:16px;
+  align-items:start;
+}
+.brand-mark{
+  width:64px;height:64px;
+  border-radius:18px;
+  display:grid;place-items:center;
+  font-size:1.9rem;font-weight:800;
+  color:#fff;
+  background:linear-gradient(135deg, var(--primary), var(--accent));
+  box-shadow:var(--shadow);
+}
+.eyebrow{
+  margin:0 0 6px;
+  font-size:.84rem;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--primary);
+}
+.brand h1{
+  margin:0;
+  font-size:clamp(2rem, 3vw, 3.2rem);
+  line-height:1.03;
+  letter-spacing:-.04em;
+}
+.brand-subtitle{
+  margin:10px 0 0;
+  max-width:72ch;
+  color:var(--text-soft);
+  line-height:1.7;
+}
+.hero-actions{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+  gap:12px;
+  padding:14px;
+  border-radius:22px;
+  background:linear-gradient(180deg, rgba(255,255,255,.74), rgba(255,255,255,.9));
+  border:1px solid rgba(16,32,51,.08);
+  box-shadow:var(--shadow-soft);
+}
+.hero-actions .button{
+  min-height:58px;
+  border-radius:16px;
+  background:linear-gradient(135deg, var(--primary), #1f6cf0);
+  color:#fff;
+  border:1px solid rgba(20,89,217,.14);
+  box-shadow:0 14px 28px rgba(20,89,217,.18);
+}
+.hero-actions .button:hover,.hero-actions .button:focus-visible{
+  box-shadow:0 18px 34px rgba(20,89,217,.24);
+}
+.launch-button{
+  letter-spacing:.01em;
+}
+
+.hero-grid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:16px;
+}
+.hero-card{
+  background:rgba(255,255,255,.92);
+  border:1px solid rgba(16,32,51,.08);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-soft);
+  padding:18px 18px 16px;
+}
+.hero-card-label{
+  margin:0 0 10px;
+  color:var(--primary);
+  font-size:.8rem;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+}
+.hero-card h2{
+  margin:0 0 8px;
+  font-size:1.15rem;
+}
+.hero-card p{
+  margin:0;
+  color:var(--text-soft);
+  line-height:1.65;
+}
+
+.top-nav{
+  border-top:1px solid rgba(16,32,51,.06);
+  background:rgba(255,255,255,.82);
+}
+.top-nav-shell{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  padding:10px 0 14px;
+}
+.top-nav a{
+  color:var(--text);
+  text-decoration:none;
+  font-weight:600;
+  padding:10px 14px;
+  border-radius:999px;
+  transition:background var(--transition), color var(--transition);
+}
+.top-nav a:hover,.top-nav a:focus-visible{
+  background:var(--primary-soft);
+  color:var(--primary);
+  outline:none;
+}
+
+.main-shell{
+  padding:34px 0 56px;
+  display:grid;
+  gap:34px;
+}
+
+.section-heading{
+  display:grid;
+  gap:8px;
+  margin-bottom:18px;
+}
+.section-heading h2{
+  margin:0;
+  font-size:clamp(1.6rem, 2.2vw, 2.4rem);
+  letter-spacing:-.03em;
+}
+.section-heading p{
+  margin:0;
+  color:var(--text-soft);
+  line-height:1.7;
+  max-width:88ch;
+}
+
+.overview-grid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:16px;
+}
+.overview-card,
+.note-card{
+  background:rgba(255,255,255,.96);
+  border:1px solid rgba(16,32,51,.08);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-soft);
+  padding:18px;
+}
+.overview-card h3,
+.note-card h3{
+  margin:0 0 8px;
+  font-size:1.05rem;
+}
+.overview-card p,
+.note-card p,
+.note-card li{
+  margin:0;
+  color:var(--text-soft);
+  line-height:1.65;
+}
+.overview-card code{
+  background:var(--surface-muted);
+  border-radius:8px;
+  padding:1px 6px;
+}
+.note-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:16px;
+  margin-top:16px;
+}
+.note-card ul{
+  margin:8px 0 0 18px;
+  padding:0;
+}
+
+.lab-section{
+  display:grid;
+  gap:18px;
+}
+.lab-layout{
+  display:grid;
+  grid-template-columns:minmax(340px, 390px) minmax(0,1fr);
+  gap:18px;
+  align-items:start;
+}
+.compare-entry-grid{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0,1fr));
+  gap:18px;
+  align-items:start;
+}
+.panel{
+  position:relative;
+  overflow:hidden;
+  background:rgba(255,255,255,.96);
+  border:1px solid rgba(16,32,51,.08);
+  border-radius:var(--radius-xl);
+  box-shadow:var(--shadow);
+  padding:20px;
+}
+.panel::before{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:4px;
+  background:linear-gradient(90deg, rgba(20,89,217,.88), rgba(12,155,180,.72), rgba(123,77,216,.72));
+}
+
+.panel-header{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  align-items:flex-start;
+  flex-wrap:wrap;
+  margin-bottom:16px;
+}
+.panel-header h3{
+  margin:0;
+  font-size:1.16rem;
+}
+.panel-header p{
+  margin:8px 0 0;
+  color:var(--text-soft);
+}
+
+.mode-pill,.legend-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:999px;
+  background:var(--surface-muted);
+  color:var(--primary);
+  font-weight:700;
+  font-size:.9rem;
+}
+.mode-pill::before,.legend-chip::before{
+  content:"";
+  width:10px;height:10px;border-radius:50%;
+  background:currentColor;
+  opacity:.7;
+}
+
+.field-group{
+  margin:0;
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:16px;
+  display:grid;
+  gap:14px;
+  background:linear-gradient(180deg, rgba(247,251,255,.9), rgba(255,255,255,.96));
+}
+.field-group legend{
+  padding:0 8px;
+  font-weight:700;
+  color:var(--text);
+}
+.field{
+  display:grid;
+  gap:6px;
+}
+.field span{font-weight:600}
+.field small{
+  color:var(--text-soft);
+  line-height:1.55;
+}
+.field input,.field textarea,.table-search input{
+  width:100%;
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:12px;
+  padding:12px 14px;
+  color:var(--text);
+  transition:border-color var(--transition), box-shadow var(--transition), background var(--transition);
+}
+.field textarea{resize:vertical;min-height:140px}
+.field input:focus,.field textarea:focus,.table-search input:focus,.segmented-button:focus-visible,.button:focus-visible,.chip:focus-visible,.table-row-button:focus-visible,.check-option:focus-within{
+  outline:none;
+  border-color:var(--primary);
+  box-shadow:var(--focus);
+}
+
+.action-toolbar{
+  margin-top:16px;
+  display:grid;
+  gap:10px;
+}
+.action-group{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.compact-toolbar{display:flex;gap:10px;flex-wrap:wrap}
+
+.button{
+  appearance:none;
+  border:none;
+  border-radius:12px;
+  padding:11px 14px;
+  font-weight:700;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  transition:transform var(--transition), box-shadow var(--transition), background var(--transition), color var(--transition);
+}
+.button:hover{transform:translateY(-1px)}
+.button.primary{
+  background:linear-gradient(135deg, var(--primary), var(--primary-strong));
+  color:#fff;
+  box-shadow:0 12px 24px rgba(20,89,217,.22);
+}
+.button.secondary{
+  background:var(--primary-soft);
+  color:var(--primary);
+}
+.button.ghost{
+  background:#fff;
+  color:var(--text);
+  border:1px solid var(--line);
+}
+
+.quick-examples{
+  margin-top:16px;
+  padding:14px;
+  border-radius:var(--radius-lg);
+  background:var(--surface-soft);
+  border:1px solid var(--line);
+}
+.quick-title{
+  margin:0 0 10px;
+  font-size:.92rem;
+  color:var(--text-soft);
+  font-weight:700;
+}
+.chip-row{display:flex;gap:10px;flex-wrap:wrap}
+.chip{
+  appearance:none;
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+  border-radius:999px;
+  padding:9px 12px;
+  cursor:pointer;
+  font-weight:600;
+  transition:background var(--transition), color var(--transition), border-color var(--transition);
+}
+.chip:hover{
+  border-color:var(--primary);
+  color:var(--primary);
+  background:var(--primary-soft);
+}
+
+.message{
+  margin-top:16px;
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:var(--surface-soft);
+  color:var(--text);
+  line-height:1.65;
+}
+.message.good{background:#effaf5;border-color:#c9eadc;color:#0e5b39}
+.message.warn{background:#fff8ea;border-color:#eedcae;color:#7b5500}
+.message.bad{background:#fff1f4;border-color:#efcad2;color:#8a2234}
+
+.formula-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:14px;
+}
+.formula-card,.insight-card{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, #fff, var(--surface-soft));
+  border-radius:18px;
+  padding:16px;
+}
+.formula-title{
+  margin:0 0 10px;
+  color:var(--primary);
+  font-size:.84rem;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.formula-line{
+  line-height:1.72;
+  color:var(--text);
+  word-break:break-word;
+}
+.formula-line+.formula-line{margin-top:6px}
+.formula-line .dim{color:var(--text-soft)}
+.insight-grid{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:12px;
+}
+.insight-card h4{
+  margin:0 0 8px;
+  font-size:.92rem;
+  color:var(--text-soft);
+}
+.insight-card p{
+  margin:0;
+  font-size:1.04rem;
+  font-weight:700;
+}
+
+.chart-controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.segmented{
+  display:inline-flex;
+  background:var(--surface-muted);
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:4px;
+}
+.segmented-button{
+  appearance:none;
+  border:none;
+  background:transparent;
+  color:var(--text-soft);
+  padding:8px 12px;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:700;
+  transition:background var(--transition), color var(--transition), transform var(--transition);
+}
+.segmented-button.is-active{
+  background:#fff;
+  color:var(--primary);
+  box-shadow:var(--shadow-soft);
+}
+
+.chart-card,.table-card{
+  margin-top:14px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:linear-gradient(180deg, #fff, var(--surface-soft));
+  padding:16px;
+}
+.chart-card-header,.table-card-header{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  align-items:flex-start;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.chart-card-header h4,.table-card-header h4{
+  margin:0;
+  font-size:1.04rem;
+}
+.chart-readout,.table-subtitle{
+  margin:6px 0 0;
+  color:var(--text-soft);
+  line-height:1.6;
+}
+.legend-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.legend-chip{color:var(--text)}
+.legend-chip[data-tone="primary"]{color:var(--primary)}
+.legend-chip[data-tone="accent"]{color:var(--accent)}
+.legend-chip[data-tone="success"]{color:var(--success)}
+
+.chart-stage{
+  position:relative;
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid rgba(16,32,51,.1);
+  background:linear-gradient(180deg, #fbfdff 0%, #eef5fc 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
+}
+
+.chart-stage canvas{width:100%;height:auto}
+.chart-tooltip{
+  position:absolute;
+  min-width:160px;
+  padding:10px 12px;
+  border-radius:12px;
+  background:rgba(16,32,51,.94);
+  color:#fff;
+  box-shadow:0 18px 34px rgba(16,32,51,.22);
+  font-size:.9rem;
+  line-height:1.55;
+  pointer-events:none;
+  transform:translate(12px, -12px);
+}
+.chart-tooltip strong{display:block;margin-bottom:4px}
+.chart-tooltip small{display:block;opacity:.84}
+
+.table-search{
+  display:grid;
+  gap:6px;
+  min-width:min(100%, 260px);
+  color:var(--text-soft);
+  font-size:.92rem;
+}
+.table-wrap{
+  border:1px solid var(--line);
+  border-radius:16px;
+  overflow:visible;
+  max-height:none;
+  background:#fff;
+}
+.table-wrap table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:560px;
+}
+.table-wrap th,.table-wrap td{
+  border-bottom:1px solid var(--line);
+  padding:10px 12px;
+  text-align:left;
+  vertical-align:top;
+  line-height:1.5;
+}
+.table-wrap th{
+  position:static;
+  background:var(--surface-soft);
+  color:var(--primary);
+  font-size:.92rem;
+}
+.table-wrap th:first-child,.table-wrap td:first-child{
+  position:static;
+  background:#f5f9ff;
+}
+.table-row-button{
+  appearance:none;
+  display:block;
+  width:100%;
+  text-align:left;
+  background:transparent;
+  border:none;
+  padding:0;
+  margin:0;
+  cursor:pointer;
+  color:inherit;
+}
+.table-wrap tbody tr{transition:background var(--transition)}
+.table-wrap tbody tr:nth-child(even){background:#fbfdff}
+.table-wrap tbody tr:hover{background:#eef5ff}
+.table-wrap tbody tr.is-active{background:#e8f0ff}
+.table-wrap tbody tr.is-hidden{display:none}
+
+.compare-panel .chart-stage canvas{width:100%;height:auto}
+.compare-formulas{grid-template-columns:repeat(3, minmax(0,1fr))}
+.compare-insights{grid-template-columns:repeat(4, minmax(0,1fr))}
+
+.selector-grid{
+  display:grid;
+  gap:10px;
+}
+.check-option{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:12px 14px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:#fff;
+}
+.check-option input{margin-top:2px}
+.check-option strong{display:block}
+.check-option small{display:block;color:var(--text-soft);line-height:1.5}
+.status-note{
+  margin-top:12px;
+  padding:12px 14px;
+  border-radius:14px;
+  background:#f7fbff;
+  border:1px dashed #c5d8ee;
+  color:var(--text-soft);
+  line-height:1.6;
+}
+
+.quiz-panel{display:grid;gap:18px}
+.quiz-meta{margin:6px 0 0;color:var(--text-soft)}
+.quiz-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  gap:16px;
+}
+.question-card{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, #fff, var(--surface-soft));
+  border-radius:18px;
+  padding:16px;
+}
+.question-card h4{
+  margin:0 0 10px;
+  line-height:1.6;
+}
+.question-card label{
+  display:block;
+  margin:8px 0;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fff;
+  transition:background var(--transition), border-color var(--transition);
+}
+.question-card label:hover{background:var(--primary-soft);border-color:#bfd3ff}
+.question-card.correct{border-color:#bee3d0;background:#f2fcf7}
+.question-card.wrong{border-color:#efcad2;background:#fff6f8}
+.feedback{
+  margin-top:10px;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:#fff;
+  line-height:1.65;
+}
+.hidden{display:none !important}
+
+.site-footer{
+  border-top:1px solid rgba(16,32,51,.08);
+  background:rgba(255,255,255,.92);
+}
+.footer-shell{
+  padding:24px 0 34px;
+  color:var(--text-soft);
+  line-height:1.7;
+}
+.footer-shell p{margin:0}
+.footer-shell p + p{margin-top:6px}
+.footer-note{font-size:.95rem}
+
+@media (max-width: 1220px){
+  .compare-entry-grid{grid-template-columns:repeat(2, minmax(0,1fr))}
+  .compare-formulas{grid-template-columns:repeat(2, minmax(0,1fr))}
+}
+
+@media (max-width: 980px){
+  .hero-grid,.overview-grid,.note-grid,.formula-grid,.insight-grid,.quiz-grid{grid-template-columns:1fr 1fr}
+  .lab-layout{grid-template-columns:1fr}
+  .compare-insights{grid-template-columns:repeat(2, minmax(0,1fr))}
+}
+
+@media (max-width: 760px){
+  .header-shell{padding-top:22px}
+  .brand{grid-template-columns:1fr}
+  .hero-grid,.overview-grid,.note-grid,.formula-grid,.insight-grid,.quiz-grid,.compare-entry-grid,.compare-formulas,.compare-insights{grid-template-columns:1fr}
+  .top-nav-shell{padding-bottom:10px}
+  .top-nav a{padding:9px 12px}
+  .table-wrap table{min-width:0}
+}
+
+@media print{
+  .top-nav,.action-toolbar,.chart-controls,.table-search,.quick-examples,.skip-link{display:none !important}
+  body{background:white;color:black}
+  .panel,.hero-card,.overview-card,.note-card,.formula-card,.insight-card,.question-card{box-shadow:none;background:white}
+}
+
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo principal</a>
+
+  <header class="site-header" id="topo">
+    <div class="shell header-shell">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">Σ</div>
+        <div>
+          <p class="eyebrow">Prof. Alessandro • laboratório offline</p>
+          <h1>Laboratório Interativo de Progressões</h1>
+          <p class="brand-subtitle">P.A., P.G. e P.H. em rolagem normal de página, com gráficos conectados às tabelas, comparador seletivo, entradas em formato decimal brasileiro e acabamento visual mais refinado para aula e estudo.</p>
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        <a class="button primary launch-button" href="#pa">Abrir laboratório de P.A.</a>
+        <a class="button primary launch-button" href="#pg">Abrir laboratório de P.G.</a>
+        <a class="button primary launch-button" href="#ph">Abrir laboratório de P.H.</a>
+        <a class="button primary launch-button" href="#comparador">Ir para o comparador</a>
+      </div>
+
+      <div class="hero-grid" aria-label="Resumo rápido do laboratório">
+        <article class="hero-card">
+          <p class="hero-card-label">Fluxo visual</p>
+          <h2>Rolagem única</h2>
+          <p>Sem sobreposição da parte inferior sobre a abertura inicial. A leitura agora segue em uma única janela com rolagem normal.</p>
+        </article>
+        <article class="hero-card">
+          <p class="hero-card-label">Agora com P.H.</p>
+          <h2>Três progressões</h2>
+          <p>P.A., P.G. e P.H. com entradas, fórmulas, gráficos, tabelas, busca, exportações e leitura integrada.</p>
+        </article>
+        <article class="hero-card">
+          <p class="hero-card-label">Comparação mais forte</p>
+          <h2>2 ou 3 modelos</h2>
+          <p>Escolha quais progressões quer comparar e acompanhe qual domina em cada termo e qual é a amplitude entre elas.</p>
+        </article>
+      </div>
+    </div>
+
+    <nav class="top-nav" aria-label="Seções do laboratório">
+      <div class="shell top-nav-shell">
+        <a href="#visao-geral">Visão geral</a>
+        <a href="#pa">P.A.</a>
+        <a href="#pg">P.G.</a>
+        <a href="#ph">P.H.</a>
+        <a href="#analisador">Analisador</a>
+        <a href="#comparador">Comparador</a>
+        <a href="#quiz">Quiz</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="conteudo" class="shell main-shell">
+    <section id="visao-geral" class="overview-section" aria-labelledby="overviewTitle">
+      <div class="section-heading">
+        <p class="eyebrow">Visão geral</p>
+        <h2 id="overviewTitle">O que foi aprimorado nesta versão</h2>
+        <p>Além da limpeza visual, dos gráficos mais didáticos e da acessibilidade reforçada, esta versão acrescenta a Progressão Harmônica, remove a sensação de janela sobreposta e amplia o comparador para combinações de duas ou três progressões.</p>
+      </div>
+
+      <div class="overview-grid">
+        <article class="overview-card">
+          <h3>1. Rolagem única da página</h3>
+          <p>A página inteira segue um fluxo contínuo. O conteúdo inferior não fica mais "entrando por trás" do cabeçalho de abertura.</p>
+        </article>
+        <article class="overview-card">
+          <h3>2. P.H. integrada ao laboratório</h3>
+          <p>Agora existe uma seção própria para a Progressão Harmônica, com destaque da P.A. associada no denominador.</p>
+        </article>
+        <article class="overview-card">
+          <h3>3. Comparador seletivo</h3>
+          <p>Você decide se quer comparar P.A. × P.G., P.A. × P.H., P.G. × P.H. ou as três ao mesmo tempo.</p>
+        </article>
+        <article class="overview-card">
+          <h3>4. Tabela com leitura ampliada</h3>
+          <p>Além dos valores, o comparador mostra qual modelo é maior em cada termo e qual é a amplitude entre os selecionados.</p>
+        </article>
+        <article class="overview-card">
+          <h3>5. Estrutura mais estável</h3>
+          <p>Sem rolagens internas pesadas nas tabelas principais. A navegação fica mais natural para aula em tela cheia.</p>
+        </article>
+        <article class="overview-card">
+          <h3>6. Código modularizado</h3>
+          <p>Arquivos separados para estilo, gráficos, banco do quiz e lógica principal, facilitando manutenção e evolução.</p>
+        </article>
+      </div>
+
+      <div class="note-grid">
+        <article class="note-card">
+          <h3>Roteiro didático sugerido</h3>
+          <ul>
+            <li>Comece com a P.A. para fixar crescimento linear.</li>
+            <li>Siga com a P.G. para visualizar crescimento multiplicativo.</li>
+            <li>Use a P.H. para mostrar a ideia de recíprocos de uma P.A.</li>
+            <li>Feche com o comparador e o quiz.</li>
+          </ul>
+        </article>
+        <article class="note-card">
+          <h3>Melhoria extra desta versão</h3>
+          <p>O comparador ganhou uma leitura pedagógica adicional: além dos valores, ele mostra automaticamente quem lidera em cada termo, a distância entre os modelos selecionados e agora respeita melhor a escrita decimal com vírgula usada no Brasil.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="lab-section" id="pa" aria-labelledby="paTitle">
+      <div class="section-heading">
+        <p class="eyebrow">Laboratório 1</p>
+        <h2 id="paTitle">Progressão Aritmética</h2>
+        <p>Ideal para leitura linear: razão constante, crescimento ou decrescimento uniforme e soma parcial em cada etapa.</p>
+      </div>
+
+      <div class="lab-layout">
+        <article class="panel input-panel">
+          <header class="panel-header">
+            <h3>Entradas da P.A.</h3>
+            <span class="mode-pill" id="paModeChip">Modo: numérico</span>
+          </header>
+
+          <fieldset class="field-group">
+            <legend>Parâmetros</legend>
+
+            <label class="field">
+              <span>a₁</span>
+              <input id="pa_a1" type="text" value="3" autocomplete="off" aria-describedby="paA1Hint" />
+              <small id="paA1Hint">Aceita número, fração, expressão com π ou valor literal.</small>
+            </label>
+
+            <label class="field">
+              <span>Razão r</span>
+              <input id="pa_r" type="text" value="4" autocomplete="off" aria-describedby="paRHint" />
+              <small id="paRHint">Use vírgula para decimais. Ex.: 0,5; -2; 3/4.</small>
+            </label>
+
+            <label class="field">
+              <span>Quantidade de termos</span>
+              <input id="pa_n" type="number" min="1" max="100" value="12" />
+            </label>
+          </fieldset>
+
+          <div class="action-toolbar" aria-label="Ações da P.A.">
+            <div class="action-group">
+              <button type="button" class="button primary" onclick="AppActions.runPA()">Gerar</button>
+              <button type="button" class="button secondary" onclick="AppActions.runPA(10)">10 termos</button>
+              <button type="button" class="button secondary" onclick="AppActions.runPA(50)">50 termos</button>
+              <button type="button" class="button secondary" onclick="AppActions.runPA(100)">100 termos</button>
+            </div>
+            <div class="action-group">
+              <button type="button" class="button ghost" onclick="AppActions.clearSection('pa')">Limpar</button>
+              <button type="button" class="button ghost" onclick="AppActions.exportSectionCSV('pa')">CSV</button>
+              <button type="button" class="button ghost" onclick="AppActions.downloadCanvas('paCanvas','grafico_pa_profissional.png')">Gráfico PNG</button>
+              <button type="button" class="button ghost" onclick="AppActions.exportTablePNG('pa','Tabela da P.A.')">Tabela PNG</button>
+            </div>
+          </div>
+
+          <div class="quick-examples">
+            <p class="quick-title">Exemplos rápidos</p>
+            <div class="chip-row">
+              <button type="button" class="chip" data-example="pa" data-a1="5" data-step="3" data-n="12">Crescente</button>
+              <button type="button" class="chip" data-example="pa" data-a1="20" data-step="-2" data-n="12">Decrescente</button>
+              <button type="button" class="chip" data-example="pa" data-a1="a" data-step="d" data-n="8">Literal</button>
+            </div>
+          </div>
+
+          <div class="message" id="paMessage" aria-live="polite">Preencha os campos e gere a progressão.</div>
+        </article>
+
+        <article class="panel result-panel">
+          <header class="panel-header">
+            <h3>Leitura matemática e visual</h3>
+            <div class="chart-controls" aria-label="Controles do gráfico da P.A.">
+              <div class="segmented">
+                <button type="button" class="segmented-button is-active" data-scale-target="pa" data-scale="linear">Linear</button>
+                <button type="button" class="segmented-button" data-scale-target="pa" data-scale="auto">Auto</button>
+                <button type="button" class="segmented-button" data-scale-target="pa" data-scale="log">Log</button>
+              </div>
+              <div class="segmented">
+                <button type="button" class="segmented-button is-active" data-type-target="pa" data-chart-type="line">Linha</button>
+                <button type="button" class="segmented-button" data-type-target="pa" data-chart-type="bar">Barras</button>
+              </div>
+            </div>
+          </header>
+
+          <div class="formula-grid" id="paFormulaGrid"></div>
+          <div class="insight-grid" id="paInsights"></div>
+
+          <section class="chart-card" aria-labelledby="paChartTitle">
+            <div class="chart-card-header">
+              <div>
+                <h4 id="paChartTitle">Gráfico da P.A.</h4>
+                <p id="paChartReadout" class="chart-readout">Passe o mouse ou clique na tabela para destacar um termo.</p>
+              </div>
+              <div class="legend-row" id="paLegend"></div>
+            </div>
+            <div class="chart-stage" id="paChartStage">
+              <canvas id="paCanvas" width="980" height="360" tabindex="0" aria-label="Gráfico da progressão aritmética"></canvas>
+              <div class="chart-tooltip" id="paTooltip" hidden></div>
+            </div>
+          </section>
+
+          <section class="table-card" aria-labelledby="paTableTitle">
+            <div class="table-card-header">
+              <div>
+                <h4 id="paTableTitle">Tabela de termos</h4>
+                <p class="table-subtitle">Busca rápida e sincronização com o gráfico.</p>
+              </div>
+              <label class="table-search">
+                <span>Buscar</span>
+                <input id="paSearch" type="search" placeholder="Ex.: 12 ou 45,5" aria-label="Buscar termo da P.A." />
+              </label>
+            </div>
+            <div class="table-wrap" id="paTermsBox"></div>
+          </section>
+        </article>
+      </div>
+    </section>
+
+    <section class="lab-section" id="pg" aria-labelledby="pgTitle">
+      <div class="section-heading">
+        <p class="eyebrow">Laboratório 2</p>
+        <h2 id="pgTitle">Progressão Geométrica</h2>
+        <p>Leitura multiplicativa, crescimento ou decaimento exponencial, alternância de sinais e controle manual de escala.</p>
+      </div>
+
+      <div class="lab-layout">
+        <article class="panel input-panel">
+          <header class="panel-header">
+            <h3>Entradas da P.G.</h3>
+            <span class="mode-pill" id="pgModeChip">Modo: numérico</span>
+          </header>
+
+          <fieldset class="field-group">
+            <legend>Parâmetros</legend>
+
+            <label class="field">
+              <span>a₁</span>
+              <input id="pg_a1" type="text" value="2" autocomplete="off" />
+              <small>Aceita número, fração ou literal. A vírgula decimal brasileira é reconhecida.</small>
+            </label>
+
+            <label class="field">
+              <span>Razão q</span>
+              <input id="pg_q" type="text" value="2" autocomplete="off" />
+              <small>Use valores como 2; 1/2; -3; π ou 0,5.</small>
+            </label>
+
+            <label class="field">
+              <span>Quantidade de termos</span>
+              <input id="pg_n" type="number" min="1" max="100" value="12" />
+            </label>
+          </fieldset>
+
+          <div class="action-toolbar" aria-label="Ações da P.G.">
+            <div class="action-group">
+              <button type="button" class="button primary" onclick="AppActions.runPG()">Gerar</button>
+              <button type="button" class="button secondary" onclick="AppActions.runPG(10)">10 termos</button>
+              <button type="button" class="button secondary" onclick="AppActions.runPG(50)">50 termos</button>
+              <button type="button" class="button secondary" onclick="AppActions.runPG(100)">100 termos</button>
+            </div>
+            <div class="action-group">
+              <button type="button" class="button ghost" onclick="AppActions.clearSection('pg')">Limpar</button>
+              <button type="button" class="button ghost" onclick="AppActions.exportSectionCSV('pg')">CSV</button>
+              <button type="button" class="button ghost" onclick="AppActions.downloadCanvas('pgCanvas','grafico_pg_profissional.png')">Gráfico PNG</button>
+              <button type="button" class="button ghost" onclick="AppActions.exportTablePNG('pg','Tabela da P.G.')">Tabela PNG</button>
+            </div>
+          </div>
+
+          <div class="quick-examples">
+            <p class="quick-title">Exemplos rápidos</p>
+            <div class="chip-row">
+              <button type="button" class="chip" data-example="pg" data-a1="2" data-step="2" data-n="10">Crescimento forte</button>
+              <button type="button" class="chip" data-example="pg" data-a1="81" data-step="1/3" data-n="10">Decaimento</button>
+              <button type="button" class="chip" data-example="pg" data-a1="3" data-step="-2" data-n="10">Alternância</button>
+              <button type="button" class="chip" data-example="pg" data-a1="a" data-step="q" data-n="8">Literal</button>
+            </div>
+          </div>
+
+          <div class="message" id="pgMessage" aria-live="polite">Preencha os campos e gere a progressão.</div>
+        </article>
+
+        <article class="panel result-panel">
+          <header class="panel-header">
+            <h3>Leitura matemática e visual</h3>
+            <div class="chart-controls" aria-label="Controles do gráfico da P.G.">
+              <div class="segmented">
+                <button type="button" class="segmented-button is-active" data-scale-target="pg" data-scale="auto">Auto</button>
+                <button type="button" class="segmented-button" data-scale-target="pg" data-scale="linear">Linear</button>
+                <button type="button" class="segmented-button" data-scale-target="pg" data-scale="log">Log</button>
+              </div>
+              <div class="segmented">
+                <button type="button" class="segmented-button is-active" data-type-target="pg" data-chart-type="line">Linha</button>
+                <button type="button" class="segmented-button" data-type-target="pg" data-chart-type="bar">Barras</button>
+              </div>
+            </div>
+          </header>
+
+          <div class="formula-grid" id="pgFormulaGrid"></div>
+          <div class="insight-grid" id="pgInsights"></div>
+
+          <section class="chart-card" aria-labelledby="pgChartTitle">
+            <div class="chart-card-header">
+              <div>
+                <h4 id="pgChartTitle">Gráfico da P.G.</h4>
+                <p id="pgChartReadout" class="chart-readout">A escala automática escolhe log quando a diferença entre valores fica muito grande.</p>
+              </div>
+              <div class="legend-row" id="pgLegend"></div>
+            </div>
+            <div class="chart-stage" id="pgChartStage">
+              <canvas id="pgCanvas" width="980" height="360" tabindex="0" aria-label="Gráfico da progressão geométrica"></canvas>
+              <div class="chart-tooltip" id="pgTooltip" hidden></div>
+            </div>
+          </section>
+
+          <section class="table-card" aria-labelledby="pgTableTitle">
+            <div class="table-card-header">
+              <div>
+                <h4 id="pgTableTitle">Tabela de termos</h4>
+                <p class="table-subtitle">Os termos dialogam com o gráfico: clique em uma linha para destacar o ponto.</p>
+              </div>
+              <label class="table-search">
+                <span>Buscar</span>
+                <input id="pgSearch" type="search" placeholder="Ex.: 128 ou 0,125" aria-label="Buscar termo da P.G." />
+              </label>
+            </div>
+            <div class="table-wrap" id="pgTermsBox"></div>
+          </section>
+        </article>
+      </div>
+    </section>
+
+    <section class="lab-section" id="ph" aria-labelledby="phTitle">
+      <div class="section-heading">
+        <p class="eyebrow">Laboratório 3</p>
+        <h2 id="phTitle">Progressão Harmônica</h2>
+        <p>Cada termo é o recíproco de uma Progressão Aritmética associada. A leitura mostra o termo harmônico, o denominador associado e a soma parcial acumulada.</p>
+      </div>
+
+      <div class="lab-layout">
+        <article class="panel input-panel">
+          <header class="panel-header">
+            <h3>Entradas da P.H.</h3>
+            <span class="mode-pill" id="phModeChip">Modo: numérico</span>
+          </header>
+
+          <fieldset class="field-group">
+            <legend>Parâmetros</legend>
+
+            <label class="field">
+              <span>h₁</span>
+              <input id="ph_h1" type="text" value="1" autocomplete="off" />
+              <small>Primeiro termo da P.H. Não pode ser zero. Use vírgula para decimais.</small>
+            </label>
+
+            <label class="field">
+              <span>Razão r da P.A. associada</span>
+              <input id="ph_r" type="text" value="1" autocomplete="off" />
+              <small>A P.A. associada é formada pelos denominadores 1/h₁, 1/h₂, 1/h₃... A vírgula decimal brasileira é aceita.</small>
+            </label>
+
+            <label class="field">
+              <span>Quantidade de termos</span>
+              <input id="ph_n" type="number" min="1" max="100" value="12" />
+            </label>
+          </fieldset>
+
+          <div class="action-toolbar" aria-label="Ações da P.H.">
+            <div class="action-group">
+              <button type="button" class="button primary" onclick="AppActions.runPH()">Gerar</button>
+              <button type="button" class="button secondary" onclick="AppActions.runPH(10)">10 termos</button>
+              <button type="button" class="button secondary" onclick="AppActions.runPH(50)">50 termos</button>
+              <button type="button" class="button secondary" onclick="AppActions.runPH(100)">100 termos</button>
+            </div>
+            <div class="action-group">
+              <button type="button" class="button ghost" onclick="AppActions.clearSection('ph')">Limpar</button>
+              <button type="button" class="button ghost" onclick="AppActions.exportSectionCSV('ph')">CSV</button>
+              <button type="button" class="button ghost" onclick="AppActions.downloadCanvas('phCanvas','grafico_ph_profissional.png')">Gráfico PNG</button>
+              <button type="button" class="button ghost" onclick="AppActions.exportTablePNG('ph','Tabela da P.H.')">Tabela PNG</button>
+            </div>
+          </div>
+
+          <div class="quick-examples">
+            <p class="quick-title">Exemplos rápidos</p>
+            <div class="chip-row">
+              <button type="button" class="chip" data-example="ph" data-a1="1" data-step="1" data-n="10">Harmônica clássica</button>
+              <button type="button" class="chip" data-example="ph" data-a1="1/2" data-step="1/2" data-n="10">Decaimento suave</button>
+              <button type="button" class="chip" data-example="ph" data-a1="h" data-step="d" data-n="8">Literal</button>
+            </div>
+          </div>
+
+          <div class="message" id="phMessage" aria-live="polite">Preencha os campos e gere a progressão.</div>
+        </article>
+
+        <article class="panel result-panel">
+          <header class="panel-header">
+            <h3>Leitura matemática e visual</h3>
+            <div class="chart-controls" aria-label="Controles do gráfico da P.H.">
+              <div class="segmented">
+                <button type="button" class="segmented-button is-active" data-scale-target="ph" data-scale="linear">Linear</button>
+                <button type="button" class="segmented-button" data-scale-target="ph" data-scale="auto">Auto</button>
+                <button type="button" class="segmented-button" data-scale-target="ph" data-scale="log">Log</button>
+              </div>
+              <div class="segmented">
+                <button type="button" class="segmented-button is-active" data-type-target="ph" data-chart-type="line">Linha</button>
+                <button type="button" class="segmented-button" data-type-target="ph" data-chart-type="bar">Barras</button>
+              </div>
+            </div>
+          </header>
+
+          <div class="formula-grid" id="phFormulaGrid"></div>
+          <div class="insight-grid" id="phInsights"></div>
+
+          <section class="chart-card" aria-labelledby="phChartTitle">
+            <div class="chart-card-header">
+              <div>
+                <h4 id="phChartTitle">Gráfico da P.H.</h4>
+                <p id="phChartReadout" class="chart-readout">Passe o mouse ou clique na tabela para destacar um termo.</p>
+              </div>
+              <div class="legend-row" id="phLegend"></div>
+            </div>
+            <div class="chart-stage" id="phChartStage">
+              <canvas id="phCanvas" width="980" height="360" tabindex="0" aria-label="Gráfico da progressão harmônica"></canvas>
+              <div class="chart-tooltip" id="phTooltip" hidden></div>
+            </div>
+          </section>
+
+          <section class="table-card" aria-labelledby="phTableTitle">
+            <div class="table-card-header">
+              <div>
+                <h4 id="phTableTitle">Tabela de termos</h4>
+                <p class="table-subtitle">Além do termo harmônico, a tabela mostra o denominador da P.A. associada.</p>
+              </div>
+              <label class="table-search">
+                <span>Buscar</span>
+                <input id="phSearch" type="search" placeholder="Ex.: 1/3, 0,25 ou 4" aria-label="Buscar termo da P.H." />
+              </label>
+            </div>
+            <div class="table-wrap" id="phTermsBox"></div>
+          </section>
+        </article>
+      </div>
+    </section>
+
+    <section class="lab-section" id="analisador" aria-labelledby="analysisTitle">
+      <div class="section-heading">
+        <p class="eyebrow">Laboratório 4</p>
+        <h2 id="analysisTitle">Analisador automático de sequência</h2>
+        <p>Digite alguns termos e o sistema tenta reconhecer o padrão como P.A. ou P.G., explicando o diagnóstico e estendendo a sequência.</p>
+      </div>
+
+      <div class="lab-layout">
+        <article class="panel input-panel">
+          <header class="panel-header">
+            <h3>Termos informados</h3>
+            <span class="mode-pill">Diagnóstico automático</span>
+          </header>
+
+          <fieldset class="field-group">
+            <legend>Sequência de entrada</legend>
+            <label class="field">
+              <span>Termos separados por ponto e vírgula ou quebra de linha</span>
+              <textarea id="manualTerms" rows="7">4; 7; 10; 13</textarea>
+              <small>Use pelo menos 3 termos numéricos. A vírgula é reservada para casas decimais; separe os termos com ponto e vírgula ou uma linha por termo. Ex.: 0,5; 1,0; 1,5.</small>
+            </label>
+
+            <label class="field">
+              <span>Quantidade final de termos após a extensão</span>
+              <input id="analysis_n" type="number" min="3" max="100" value="12" />
+            </label>
+          </fieldset>
+
+          <div class="action-toolbar" aria-label="Ações do analisador">
+            <div class="action-group">
+              <button type="button" class="button primary" onclick="AppActions.analyzeManual()">Analisar</button>
+              <button type="button" class="button secondary" onclick="AppActions.applyAnalysisExample('pa')">Exemplo P.A.</button>
+              <button type="button" class="button secondary" onclick="AppActions.applyAnalysisExample('pg')">Exemplo P.G.</button>
+            </div>
+            <div class="action-group">
+              <button type="button" class="button ghost" onclick="AppActions.clearSection('analysis')">Limpar</button>
+              <button type="button" class="button ghost" onclick="AppActions.exportSectionCSV('analysis')">CSV</button>
+              <button type="button" class="button ghost" onclick="AppActions.downloadCanvas('analysisCanvas','grafico_analise_profissional.png')">Gráfico PNG</button>
+              <button type="button" class="button ghost" onclick="AppActions.exportTablePNG('analysis','Tabela da análise automática')">Tabela PNG</button>
+            </div>
+          </div>
+
+          <div class="message" id="analysisMessage" aria-live="polite">Informe pelo menos 3 termos para análise.</div>
+        </article>
+
+        <article class="panel result-panel">
+          <header class="panel-header">
+            <h3>Diagnóstico e extensão</h3>
+            <div class="chart-controls" aria-label="Controles do gráfico da análise">
+              <div class="segmented">
+                <button type="button" class="segmented-button is-active" data-scale-target="analysis" data-scale="auto">Auto</button>
+                <button type="button" class="segmented-button" data-scale-target="analysis" data-scale="linear">Linear</button>
+                <button type="button" class="segmented-button" data-scale-target="analysis" data-scale="log">Log</button>
+              </div>
+              <div class="segmented">
+                <button type="button" class="segmented-button is-active" data-type-target="analysis" data-chart-type="line">Linha</button>
+                <button type="button" class="segmented-button" data-type-target="analysis" data-chart-type="bar">Barras</button>
+              </div>
+            </div>
+          </header>
+
+          <div class="formula-grid" id="analysisFormulaGrid"></div>
+          <div class="insight-grid" id="analysisInsights"></div>
+
+          <section class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <h4>Gráfico da sequência analisada</h4>
+                <p id="analysisChartReadout" class="chart-readout">A interpretação visual é atualizada conforme o diagnóstico encontrado.</p>
+              </div>
+              <div class="legend-row" id="analysisLegend"></div>
+            </div>
+            <div class="chart-stage" id="analysisChartStage">
+              <canvas id="analysisCanvas" width="980" height="360" tabindex="0" aria-label="Gráfico da sequência analisada"></canvas>
+              <div class="chart-tooltip" id="analysisTooltip" hidden></div>
+            </div>
+          </section>
+
+          <section class="table-card">
+            <div class="table-card-header">
+              <div>
+                <h4>Tabela gerada</h4>
+                <p class="table-subtitle">Os termos originais e os estendidos são apresentados na mesma tabela.</p>
+              </div>
+              <label class="table-search">
+                <span>Buscar</span>
+                <input id="analysisSearch" type="search" placeholder="Buscar termo ou classificação" aria-label="Buscar na tabela da análise" />
+              </label>
+            </div>
+            <div class="table-wrap" id="analysisTermsBox"></div>
+          </section>
+        </article>
+      </div>
+    </section>
+
+    <section class="lab-section" id="comparador" aria-labelledby="compareTitle">
+      <div class="section-heading">
+        <p class="eyebrow">Laboratório 5</p>
+        <h2 id="compareTitle">Comparador de Progressões</h2>
+        <p>Selecione quais modelos deseja comparar: duas progressões apenas ou as três ao mesmo tempo. O sistema mostra qual lidera em cada termo e qual é a amplitude entre os valores selecionados.</p>
+      </div>
+
+      <div class="compare-entry-grid">
+        <article class="panel">
+          <header class="panel-header">
+            <h3>P.A. para comparação</h3>
+            <span class="mode-pill">Entrada numérica</span>
+          </header>
+          <fieldset class="field-group">
+            <legend>Parâmetros da P.A.</legend>
+            <label class="field"><span>a₁ da P.A.</span><input id="cmp_pa_a1" type="text" value="2" autocomplete="off" /></label>
+            <label class="field"><span>Razão r</span><input id="cmp_pa_r" type="text" value="3" autocomplete="off" /></label>
+          </fieldset>
+        </article>
+
+        <article class="panel">
+          <header class="panel-header">
+            <h3>P.G. para comparação</h3>
+            <span class="mode-pill">Entrada numérica</span>
+          </header>
+          <fieldset class="field-group">
+            <legend>Parâmetros da P.G.</legend>
+            <label class="field"><span>a₁ da P.G.</span><input id="cmp_pg_a1" type="text" value="2" autocomplete="off" /></label>
+            <label class="field"><span>Razão q</span><input id="cmp_pg_q" type="text" value="2" autocomplete="off" /></label>
+          </fieldset>
+        </article>
+
+        <article class="panel">
+          <header class="panel-header">
+            <h3>P.H. para comparação</h3>
+            <span class="mode-pill">Entrada numérica</span>
+          </header>
+          <fieldset class="field-group">
+            <legend>Parâmetros da P.H.</legend>
+            <label class="field"><span>h₁ da P.H.</span><input id="cmp_ph_h1" type="text" value="1" autocomplete="off" /></label>
+            <label class="field"><span>Razão r da P.A. associada</span><input id="cmp_ph_r" type="text" value="1" autocomplete="off" /></label>
+          </fieldset>
+        </article>
+
+        <article class="panel">
+          <header class="panel-header">
+            <h3>Configuração do comparador</h3>
+            <span class="mode-pill">Leitura ampliada</span>
+          </header>
+          <fieldset class="field-group">
+            <legend>Seleção e saída</legend>
+            <label class="field"><span>Quantidade de termos</span><input id="cmp_n" type="number" min="2" max="100" value="15" /></label>
+            <div class="selector-grid" role="group" aria-label="Escolha quais progressões deseja comparar">
+              <label class="check-option"><input id="cmp_show_pa" type="checkbox" checked /> <span><strong>Comparar P.A.</strong><small>Modelo linear com diferença constante.</small></span></label>
+              <label class="check-option"><input id="cmp_show_pg" type="checkbox" checked /> <span><strong>Comparar P.G.</strong><small>Modelo multiplicativo com razão geométrica.</small></span></label>
+              <label class="check-option"><input id="cmp_show_ph" type="checkbox" /> <span><strong>Comparar P.H.</strong><small>Recíprocos de uma P.A. associada.</small></span></label>
+            </div>
+          </fieldset>
+          <div class="action-toolbar" aria-label="Ações do comparador">
+            <div class="action-group">
+              <button type="button" class="button primary" onclick="AppActions.runCompare()">Comparar</button>
+              <button type="button" class="button secondary" onclick="AppActions.runCompare(10)">10 termos</button>
+              <button type="button" class="button secondary" onclick="AppActions.runCompare(30)">30 termos</button>
+            </div>
+            <div class="action-group">
+              <button type="button" class="button ghost" onclick="AppActions.clearSection('compare')">Limpar</button>
+              <button type="button" class="button ghost" onclick="AppActions.downloadCanvas('compareCanvas','comparador_profissional.png')">Gráfico PNG</button>
+              <button type="button" class="button ghost" onclick="AppActions.exportTablePNG('compare','Tabela comparativa de progressões')">Tabela PNG</button>
+            </div>
+          </div>
+          <div class="status-note">Selecione pelo menos duas progressões. O comparador atualiza o gráfico, a tabela, a liderança por termo e a amplitude entre os modelos escolhidos.</div>
+          <div class="message" id="compareMessage" aria-live="polite">Use entradas numéricas reais e selecione ao menos duas progressões para comparar.</div>
+        </article>
+      </div>
+
+      <article class="panel result-panel compare-panel">
+        <header class="panel-header">
+          <h3>Resultado comparativo</h3>
+          <div class="chart-controls" aria-label="Controles do gráfico comparativo">
+            <div class="segmented">
+              <button type="button" class="segmented-button is-active" data-scale-target="compare" data-scale="auto">Auto</button>
+              <button type="button" class="segmented-button" data-scale-target="compare" data-scale="linear">Linear</button>
+              <button type="button" class="segmented-button" data-scale-target="compare" data-scale="log">Log</button>
+            </div>
+            <div class="segmented">
+              <button type="button" class="segmented-button is-active" data-type-target="compare" data-chart-type="line">Linha</button>
+              <button type="button" class="segmented-button" data-type-target="compare" data-chart-type="bar">Barras</button>
+            </div>
+          </div>
+        </header>
+
+        <div class="formula-grid compare-formulas" id="compareSummary"></div>
+        <div class="insight-grid compare-insights" id="compareInsights"></div>
+
+        <section class="chart-card">
+          <div class="chart-card-header">
+            <div>
+              <h4>Gráfico comparativo</h4>
+              <p id="compareChartReadout" class="chart-readout">Selecione duas ou três progressões para comparar comportamentos e escalas.</p>
+            </div>
+            <div class="legend-row" id="compareLegend"></div>
+          </div>
+          <div class="chart-stage" id="compareChartStage">
+            <canvas id="compareCanvas" width="1100" height="420" tabindex="0" aria-label="Comparação entre progressões"></canvas>
+            <div class="chart-tooltip" id="compareTooltip" hidden></div>
+          </div>
+        </section>
+
+        <section class="table-card">
+          <div class="table-card-header">
+            <div>
+              <h4>Tabela comparativa</h4>
+              <p class="table-subtitle">Clique em qualquer linha para destacar o mesmo termo em todas as progressões selecionadas.</p>
+            </div>
+            <label class="table-search">
+              <span>Buscar</span>
+              <input id="compareSearch" type="search" placeholder="Buscar termo, valor ou liderança" aria-label="Buscar na tabela comparativa" />
+            </label>
+          </div>
+          <div class="table-wrap" id="compareTermsBox"></div>
+        </section>
+      </article>
+    </section>
+
+    <section class="lab-section" id="quiz" aria-labelledby="quizTitle">
+      <div class="section-heading">
+        <p class="eyebrow">Laboratório 6</p>
+        <h2 id="quizTitle">Quiz de 10 questões</h2>
+        <p>Perguntas sorteadas de um banco maior, com correção comentada. Mantido apenas com questões sobre P.A. e P.G.</p>
+      </div>
+
+      <article class="panel quiz-panel">
+        <header class="panel-header">
+          <div>
+            <h3>Rodada atual</h3>
+            <p class="quiz-meta">Sempre que você resetar, um novo bloco de 10 perguntas é sorteado.</p>
+          </div>
+          <div class="action-toolbar compact-toolbar">
+            <button type="button" class="button primary" onclick="AppActions.gradeQuiz()">Corrigir quiz</button>
+            <button type="button" class="button secondary" onclick="AppActions.resetQuiz()">Nova rodada</button>
+          </div>
+        </header>
+
+        <div class="message" id="quizScore" aria-live="polite">As perguntas serão carregadas automaticamente.</div>
+        <div class="quiz-grid" id="quizGrid"></div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-shell">
+      <p><strong>Versão profissional modularizada.</strong> Arquivos separados para facilitar manutenção: <code>index.html</code>, <code>styles.css</code>, <code>data.js</code>, <code>charts.js</code> e <code>app.js</code>.</p>
+      <p class="footer-note">Compatível com uso sem internet. Para exportações, utilize os botões CSV, gráfico PNG, tabela PNG ou a impressão do navegador.</p>
+    </div>
+  </footer>
+
+  <script>
+window.QuestionBank = [
+  { id: 1, q: 'Na P.A., cada termo é obtido em relação ao anterior por meio de:', options: ['uma multiplicação constante', 'uma soma constante', 'uma divisão variável', 'um quadrado do termo anterior'], answer: 1, explain: 'Em uma P.A., a diferença entre termos consecutivos é constante.' },
+  { id: 2, q: 'Na P.G., cada termo é obtido em relação ao anterior por meio de:', options: ['uma soma constante', 'uma subtração constante', 'uma multiplicação constante', 'uma raiz constante'], answer: 2, explain: 'Em uma P.G., a razão geométrica multiplica o termo anterior.' },
+  { id: 3, q: 'Na sequência 5, 8, 11, 14, ... a razão da P.A. é:', options: ['2', '3', '5', '6'], answer: 1, explain: '8 - 5 = 3, 11 - 8 = 3 e 14 - 11 = 3.' },
+  { id: 4, q: 'Na sequência 3, 6, 12, 24, ... a razão da P.G. é:', options: ['2', '3', '4', '6'], answer: 0, explain: 'Cada termo é o dobro do anterior.' },
+  { id: 5, q: 'O termo geral da P.A. é:', options: ['aₙ = a₁·qⁿ⁻¹', 'aₙ = a₁ + (n-1)r', 'Sₙ = n(a₁+aₙ)/2', 'aₙ = a₁ + nr'], answer: 1, explain: 'Essa é a fórmula que localiza qualquer termo de uma P.A.' },
+  { id: 6, q: 'O termo geral da P.G. é:', options: ['aₙ = a₁·qⁿ⁻¹', 'aₙ = a₁ + (n-1)r', 'Sₙ = a₁/(1-q)', 'aₙ = a₁·nq'], answer: 0, explain: 'Na P.G., o expoente n-1 conta quantas vezes a razão foi aplicada.' },
+  { id: 7, q: 'Uma pessoa guarda R$ 200 por mês, sem juros. Esse caso modela:', options: ['P.G.', 'P.A.', 'nenhuma progressão', 'função quadrática'], answer: 1, explain: 'O valor acumulado aumenta sempre pela mesma quantidade.' },
+  { id: 8, q: 'Um investimento rende 10% ao mês sobre o valor atual. Esse caso modela:', options: ['P.A.', 'P.G.', 'sequência constante', 'sequência alternante'], answer: 1, explain: 'Crescimento percentual sucessivo é modelo de P.G.' },
+  { id: 9, q: 'Se a₁ = 4 e r = 3, então a₆ vale:', options: ['16', '17', '18', '19'], answer: 3, explain: 'a₆ = 4 + (6-1)·3 = 19.' },
+  { id: 10, q: 'Se a₁ = 2 e q = 3, então a₅ vale:', options: ['54', '81', '162', '243'], answer: 2, explain: 'a₅ = 2·3⁴ = 2·81 = 162.' },
+  { id: 11, q: 'Qual alternativa representa uma P.A. decrescente?', options: ['7, 10, 13, 16', '18, 15, 12, 9', '2, 4, 8, 16', '5, 5, 5, 5'], answer: 1, explain: 'A razão é negativa: -3.' },
+  { id: 12, q: 'Qual alternativa representa uma P.G. com 0 < q < 1?', options: ['81, 27, 9, 3', '2, 4, 6, 8', '1, 1, 1, 1', '5, 10, 20, 40'], answer: 0, explain: 'A razão é 1/3, portanto os termos diminuem em valor absoluto.' },
+  { id: 13, q: 'A soma dos n primeiros termos de uma P.A. pode ser calculada por:', options: ['Sₙ = n(a₁+aₙ)/2', 'Sₙ = a₁·qⁿ', 'Sₙ = a₁/(1-q)', 'Sₙ = a₁ + nr'], answer: 0, explain: 'Essa é a fórmula clássica da soma da P.A.' },
+  { id: 14, q: 'A soma dos n primeiros termos de uma P.G. com q ≠ 1 é:', options: ['Sₙ = n(a₁+aₙ)/2', 'Sₙ = a₁(qⁿ-1)/(q-1)', 'Sₙ = a₁·qⁿ⁻¹', 'Sₙ = a₁/(1-q²)'], answer: 1, explain: 'Essa é a soma parcial da P.G. finita.' },
+  { id: 15, q: 'Uma arquibancada aumenta 25 lugares por fileira. Isso é um exemplo de:', options: ['P.G.', 'P.A.', 'nenhuma das duas', 'proporção inversa'], answer: 1, explain: 'O aumento é fixo de fileira para fileira.' },
+  { id: 16, q: 'Em uma P.G., se q = 1, então a sequência é:', options: ['alternante', 'constante', 'decrescente obrigatoriamente', 'nula obrigatoriamente'], answer: 1, explain: 'Multiplicar por 1 mantém todos os termos iguais.' },
+  { id: 17, q: 'A sequência 10, 7, 4, 1, ... é:', options: ['P.A. de razão -3', 'P.G. de razão 3', 'P.G. de razão -3', 'P.A. de razão 3'], answer: 0, explain: 'A diferença entre termos consecutivos é -3.' },
+  { id: 18, q: 'A sequência 2, -4, 8, -16, ... é:', options: ['P.A. de razão -6', 'P.G. de razão -2', 'P.G. de razão 2', 'P.A. alternante'], answer: 1, explain: 'Cada termo é obtido multiplicando o anterior por -2.' },
+  { id: 19, q: 'Quando comparamos uma P.A. crescente e uma P.G. crescente com q > 1, a P.G. tende a:', options: ['crescer mais lentamente', 'crescer mais rapidamente', 'ficar constante', 'oscilar'], answer: 1, explain: 'O crescimento multiplicativo costuma superar o crescimento linear.' },
+  { id: 20, q: 'Se |q| < 1, a soma infinita da P.G. existe porque:', options: ['os termos aumentam sem limite', 'a sequência vira P.A.', 'os termos se aproximam de zero', 'a razão sempre vale zero'], answer: 2, explain: 'Quando |q| < 1, os termos diminuem em módulo e a soma infinita converge.' },
+  { id: 21, q: 'Se a₁ = 7 e r = 0, a P.A. é:', options: ['crescente', 'decrescente', 'constante', 'alternante'], answer: 2, explain: 'Razão zero produz todos os termos iguais.' },
+  { id: 22, q: 'Se a₁ = 5 e q = 1/2, então a₃ vale:', options: ['1,25', '2,5', '5', '10'], answer: 0, explain: 'a₃ = 5·(1/2)² = 5/4 = 1,25.' },
+  { id: 23, q: 'Em 9, 13, 17, 21, ... o 10º termo é:', options: ['41', '43', '45', '49'], answer: 2, explain: 'a₁ = 9, r = 4. Então a₁₀ = 9 + 9·4 = 45.' },
+  { id: 24, q: 'Em 81, 27, 9, 3, ... o 6º termo é:', options: ['1/9', '1/3', '1', '3'], answer: 1, explain: 'A razão é 1/3. Logo a₆ = 81·(1/3)⁵ = 1/3.' },
+  { id: 25, q: 'A soma dos 5 primeiros termos da P.A. 2, 5, 8, ... é:', options: ['30', '35', '40', '45'], answer: 2, explain: 'Os 5 termos são 2, 5, 8, 11 e 14; a soma vale 40.' },
+  { id: 26, q: 'A soma dos 4 primeiros termos da P.G. 3, 6, 12, ... é:', options: ['21', '39', '45', '48'], answer: 2, explain: '3 + 6 + 12 + 24 = 45.' },
+  { id: 27, q: 'Uma escada com degraus de mesma altura pode ser associada mais naturalmente a:', options: ['P.A.', 'P.G.', 'função quadrática', 'proporção inversa'], answer: 0, explain: 'Há um acréscimo fixo de altura entre níveis sucessivos.' },
+  { id: 28, q: 'Um desconto de 20% aplicado sucessivamente mês a mês segue melhor o modelo de:', options: ['P.A.', 'P.G.', 'sequência alternante', 'sequência constante'], answer: 1, explain: 'Descontos percentuais sucessivos são multiplicativos.' },
+  { id: 29, q: 'Na P.A. 12, 9, 6, 3, ... a razão é:', options: ['3', '-3', '-6', '1/3'], answer: 1, explain: 'Cada termo diminui 3 unidades.' },
+  { id: 30, q: 'Na P.G. 5, 15, 45, 135, ... a razão é:', options: ['2', '3', '5', '15'], answer: 1, explain: 'Cada termo é o triplo do anterior.' },
+  { id: 31, q: 'Se a₁ = 1 e q = -3, então a₄ vale:', options: ['-9', '9', '-27', '27'], answer: 2, explain: 'a₄ = 1·(-3)³ = -27.' },
+  { id: 32, q: 'Se a₁ = 6 e r = -2, então S₄ é:', options: ['8', '10', '12', '14'], answer: 2, explain: 'Os termos são 6, 4, 2 e 0; a soma vale 12.' },
+  { id: 33, q: 'Qual sequência não é nem P.A. nem P.G.?', options: ['2, 4, 6, 8', '3, 9, 27, 81', '1, 4, 9, 16', '10, 7, 4, 1'], answer: 2, explain: 'As diferenças e razões não se mantêm constantes em 1, 4, 9, 16.' },
+  { id: 34, q: 'Em uma P.G. positiva com 0 < q < 1, os termos tendem a:', options: ['aumentar sem limite', 'aproximar-se de zero', 'alternar sinais', 'virar negativos'], answer: 1, explain: 'A multiplicação repetida por um número entre 0 e 1 faz os termos tenderem a zero.' },
+  { id: 35, q: 'Na P.A. 1, 4, 7, 10, ... o termo aₙ pode ser escrito como:', options: ['3n - 2', '4n - 1', '3n + 1', 'n + 3'], answer: 0, explain: 'aₙ = 1 + (n-1)·3 = 3n - 2.' },
+  { id: 36, q: 'Na P.G. 2, 4, 8, 16, ... o termo aₙ pode ser escrito como:', options: ['2n', '2ⁿ', '2ⁿ⁻¹', '2·2ⁿ'], answer: 1, explain: 'aₙ = 2·2ⁿ⁻¹ = 2ⁿ.' },
+  { id: 37, q: 'Uma bactéria dobra de quantidade a cada hora. Isso ilustra:', options: ['crescimento linear', 'crescimento geométrico', 'crescimento constante nulo', 'regressão aritmética'], answer: 1, explain: 'Dobrar a cada etapa é crescimento multiplicativo.' },
+  { id: 38, q: 'Se a₁ = 100 e q = 0,9, o capital está:', options: ['aumentando 10 por etapa', 'diminuindo 10% por etapa', 'dobrando por etapa', 'ficando constante'], answer: 1, explain: 'q = 0,9 representa retenção de 90%, isto é, queda de 10% por etapa.' },
+  { id: 39, q: 'Qual soma infinita existe?', options: ['P.G. com q = 2', 'P.G. com q = -2', 'P.G. com q = 1/3', 'P.A. com r = -1'], answer: 2, explain: 'A soma infinita só existe quando |q| < 1.' },
+  { id: 40, q: 'Se a₁ = 3 e r = 5, qual termo vale 38?', options: ['a₆', 'a₇', 'a₈', 'a₉'], answer: 2, explain: '3 + (n-1)·5 = 38 ⇒ (n-1)=7 ⇒ n=8.' },
+  { id: 41, q: 'Se a₁ = 4 e q = 2, qual termo vale 128?', options: ['a₅', 'a₆', 'a₇', 'a₈'], answer: 1, explain: '4·2ⁿ⁻¹ = 128 ⇒ 2ⁿ⁻¹ = 32 ⇒ n=6.' },
+  { id: 42, q: 'Na P.A. 20, 17, 14, ... o 7º termo é:', options: ['2', '3', '4', '5'], answer: 0, explain: 'a₇ = 20 + 6·(-3) = 2.' },
+  { id: 43, q: 'Na P.G. 64, 32, 16, ... o 5º termo é:', options: ['2', '4', '8', '16'], answer: 1, explain: 'A razão é 1/2; a₅ = 64·(1/2)⁴ = 4.' },
+  { id: 44, q: 'A leitura “crescimento linear” está mais associada a:', options: ['P.A.', 'P.G.', 'soma infinita', 'expoentes negativos'], answer: 0, explain: 'Na P.A., o acréscimo absoluto é constante.' },
+  { id: 45, q: 'A leitura “crescimento exponencial” está mais associada a:', options: ['P.A.', 'P.G.', 'sequência constante', 'razão zero'], answer: 1, explain: 'Na P.G., o fator multiplicativo constante produz crescimento exponencial.' },
+  { id: 46, q: 'Em uma P.G. com q negativo, os termos costumam:', options: ['ser sempre positivos', 'alternar sinal', 'ser sempre nulos', 'ser sempre crescentes'], answer: 1, explain: 'A multiplicação por um número negativo alterna o sinal dos termos.' },
+  { id: 47, q: 'Se a₁ = 8 e q = 1, então S₆ vale:', options: ['8', '24', '40', '48'], answer: 3, explain: 'Todos os 6 termos valem 8, então a soma é 48.' },
+  { id: 48, q: 'Se a₁ = 9 e r = -1, então S₅ vale:', options: ['25', '30', '35', '40'], answer: 2, explain: 'Os 5 primeiros termos são 9, 8, 7, 6 e 5; a soma é 35.' },
+  { id: 49, q: 'Uma fila de cadeiras em que cada nova fileira tem o mesmo aumento de lugares é melhor modelada por:', options: ['P.G.', 'P.A.', 'função afim negativa obrigatoriamente', 'proporção inversa'], answer: 1, explain: 'O acréscimo por fileira é fixo, então o modelo é aritmético.' },
+  { id: 50, q: 'Em um comparador P.A. × P.G., quando a razão da P.G. é maior que 1, a tendência visual no gráfico é:', options: ['reta horizontal', 'curva que pode disparar rapidamente', 'reta decrescente obrigatória', 'oscilação aleatória'], answer: 1, explain: 'Com q > 1, o crescimento multiplicativo aparece no gráfico como curva de aceleração.' }
+];
+
+</script>
+  <script>
+(function () {
+  const registry = new Map();
+
+  function numberFormatter(value) {
+    if (window.AppUtils && typeof window.AppUtils.formatNumber === 'function') {
+      return window.AppUtils.formatNumber(value);
+    }
+    if (!Number.isFinite(value)) return 'indefinido';
+    return String(value);
+  }
+
+  function getCanvasMetrics(canvas) {
+    const ratio = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    const width = Math.max(320, Math.round(rect.width || canvas.width));
+    const height = Math.max(240, Math.round(rect.height || canvas.height));
+    if (canvas.width !== Math.round(width * ratio) || canvas.height !== Math.round(height * ratio)) {
+      canvas.width = Math.round(width * ratio);
+      canvas.height = Math.round(height * ratio);
+    }
+    return { ratio, width: canvas.width, height: canvas.height, cssWidth: width, cssHeight: height };
+  }
+
+  function inverseLog(value) {
+    return Math.sign(value) * (Math.pow(10, Math.abs(value)) - 1);
+  }
+
+  function shouldUseAutoLog(seriesArray) {
+    const values = [];
+    seriesArray.forEach(series => {
+      series.values.forEach(v => {
+        if (Number.isFinite(v)) values.push(v);
+      });
+    });
+    if (!values.length) return false;
+    const maxAbs = values.reduce((m, v) => Math.max(m, Math.abs(v)), 0);
+    const nonZero = values.map(v => Math.abs(v)).filter(v => v > 0);
+    const minNonZero = nonZero.length ? Math.min(...nonZero) : Infinity;
+    if (maxAbs >= 1e8) return true;
+    if (minNonZero !== Infinity && maxAbs / minNonZero >= 1e5) return true;
+    return false;
+  }
+
+  function buildScale(seriesArray, requestedMode) {
+    const useLog = requestedMode === 'log' || (requestedMode === 'auto' && shouldUseAutoLog(seriesArray));
+    const transformed = seriesArray.map(series => ({
+      ...series,
+      transformed: series.values.map(v => {
+        if (!Number.isFinite(v)) return NaN;
+        return useLog ? Math.sign(v) * Math.log10(1 + Math.abs(v)) : v;
+      })
+    }));
+
+    const flat = transformed.flatMap(s => s.transformed.filter(v => Number.isFinite(v)));
+    let minY = flat.length ? Math.min(...flat, 0) : -1;
+    let maxY = flat.length ? Math.max(...flat, 0) : 1;
+
+    if (minY === maxY) {
+      minY -= 1;
+      maxY += 1;
+    }
+
+    return {
+      useLog,
+      modeLabel: useLog ? (requestedMode === 'log' ? 'log manual' : 'log automático') : (requestedMode === 'linear' ? 'linear' : 'linear'),
+      transformed,
+      minY,
+      maxY
+    };
+  }
+
+  function buildPoints(state, width, height) {
+    const margin = state.chartType === 'bar'
+      ? { top: 42, right: 28, bottom: 52, left: 98 }
+      : { top: 42, right: 28, bottom: 52, left: 98 };
+    const plotW = width - margin.left - margin.right;
+    const plotH = height - margin.top - margin.bottom;
+
+    const count = Math.max(...state.series.map(s => s.values.length), 0);
+    const scale = buildScale(state.series, state.scaleMode);
+    const denominator = Math.max(1, scale.maxY - scale.minY);
+
+    const pointsBySeries = scale.transformed.map((series, seriesIndex) => {
+      return series.transformed.map((value, i) => {
+        const x = margin.left + (count <= 1 ? plotW / 2 : (plotW * i) / (count - 1));
+        const y = margin.top + ((scale.maxY - value) / denominator) * plotH;
+        return {
+          index: i,
+          seriesIndex,
+          x,
+          y,
+          value,
+          actual: state.series[seriesIndex].values[i],
+          label: state.labels[i] ?? (i + 1)
+        };
+      });
+    });
+
+    return { margin, plotW, plotH, count, scale, pointsBySeries };
+  }
+
+  function drawGrid(ctx, geometry, width, height) {
+    const { margin, plotW, plotH, scale } = geometry;
+    ctx.save();
+    const bg = ctx.createLinearGradient(0, 0, 0, height);
+    bg.addColorStop(0, '#fbfdff');
+    bg.addColorStop(1, '#edf4fb');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, width, height);
+
+    ctx.fillStyle = '#ffffff';
+    ctx.strokeStyle = 'rgba(16,32,51,.08)';
+    ctx.lineWidth = 1;
+    ctx.fillRect(margin.left, margin.top, plotW, plotH);
+    ctx.strokeRect(margin.left, margin.top, plotW, plotH);
+
+    for (let i = 0; i <= 5; i++) {
+      const y = margin.top + (plotH * i) / 5;
+      ctx.beginPath();
+      ctx.moveTo(margin.left, y);
+      ctx.lineTo(width - margin.right, y);
+      ctx.strokeStyle = i === 5 ? 'rgba(16,32,51,.12)' : 'rgba(16,32,51,.08)';
+      ctx.stroke();
+    }
+    for (let i = 0; i <= 5; i++) {
+      const x = margin.left + (plotW * i) / 5;
+      ctx.beginPath();
+      ctx.moveTo(x, margin.top);
+      ctx.lineTo(x, height - margin.bottom);
+      ctx.strokeStyle = 'rgba(16,32,51,.06)';
+      ctx.stroke();
+    }
+
+    const denominator = Math.max(1e-9, scale.maxY - scale.minY);
+    const zeroY = margin.top + ((scale.maxY - 0) / denominator) * plotH;
+    if (zeroY >= margin.top && zeroY <= height - margin.bottom) {
+      ctx.beginPath();
+      ctx.moveTo(margin.left, zeroY);
+      ctx.lineTo(width - margin.right, zeroY);
+      ctx.strokeStyle = 'rgba(16,32,51,.22)';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawAxes(ctx, geometry, width, height) {
+    const { margin, plotW, plotH, scale, count } = geometry;
+    ctx.save();
+    ctx.fillStyle = '#546579';
+    ctx.font = '12px "Segoe UI"';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+
+    for (let i = 0; i <= 5; i++) {
+      const y = margin.top + (plotH * i) / 5;
+      const transformedValue = scale.maxY - ((scale.maxY - scale.minY) * i) / 5;
+      const display = scale.useLog ? inverseLog(transformedValue) : transformedValue;
+      ctx.fillText(numberFormatter(display), margin.left - 12, y);
+    }
+
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+    for (let i = 0; i <= 5; i++) {
+      const index = Math.round(1 + ((Math.max(1, count) - 1) * i) / 5);
+      const x = margin.left + (plotW * i) / 5;
+      ctx.fillText(String(index), x, height - margin.bottom + 10);
+    }
+
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#3e4d61';
+    ctx.fillText('n', width - 10, height - 10);
+    drawScaleBadge(ctx, geometry, width);
+    ctx.restore();
+  }
+
+  function drawScaleBadge(ctx, geometry, width) {
+    const label = geometry.scale.useLog ? 'escala logarítmica' : 'escala linear';
+    ctx.save();
+    ctx.font = '12px "Segoe UI"';
+    const paddingX = 10;
+    const badgeHeight = 26;
+    const textWidth = ctx.measureText(label).width;
+    const badgeWidth = textWidth + paddingX * 2;
+    const x = width - geometry.margin.right - badgeWidth - 6;
+    const y = 10;
+    roundRect(ctx, x, y, badgeWidth, badgeHeight, 13);
+    const fill = ctx.createLinearGradient(x, y, x + badgeWidth, y + badgeHeight);
+    fill.addColorStop(0, 'rgba(20,89,217,.14)');
+    fill.addColorStop(1, 'rgba(12,155,180,.14)');
+    ctx.fillStyle = fill;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(20,89,217,.18)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.fillStyle = '#234262';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, x + badgeWidth / 2, y + badgeHeight / 2 + .5);
+    ctx.restore();
+  }
+
+  function drawLines(ctx, geometry) {
+    const { pointsBySeries, margin, plotH, scale, plotW } = geometry;
+    pointsBySeries.forEach((points, seriesIndex) => {
+      const series = geometry.series[seriesIndex];
+      if (!points.length) return;
+
+      if (geometry.chartType === 'line') {
+        ctx.save();
+
+        if (points.length > 1) {
+          const fill = ctx.createLinearGradient(0, margin.top, 0, margin.top + plotH);
+          fill.addColorStop(0, series.fill || 'rgba(20,89,217,.18)');
+          fill.addColorStop(1, 'rgba(255,255,255,0)');
+          ctx.beginPath();
+          points.forEach((point, idx) => {
+            if (idx === 0) ctx.moveTo(point.x, point.y);
+            else ctx.lineTo(point.x, point.y);
+          });
+          ctx.lineTo(points[points.length - 1].x, margin.top + plotH);
+          ctx.lineTo(points[0].x, margin.top + plotH);
+          ctx.closePath();
+          ctx.fillStyle = fill;
+          ctx.fill();
+        }
+
+        ctx.beginPath();
+        points.forEach((point, idx) => {
+          if (idx === 0) ctx.moveTo(point.x, point.y);
+          else ctx.lineTo(point.x, point.y);
+        });
+        ctx.strokeStyle = series.color;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        points.forEach(point => {
+          const isActive = point.index === geometry.activeIndex;
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, isActive ? 6 : 4, 0, Math.PI * 2);
+          ctx.fillStyle = '#fff';
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, isActive ? 5 : 3, 0, Math.PI * 2);
+          ctx.fillStyle = series.color;
+          ctx.fill();
+        });
+        ctx.restore();
+      } else {
+        const groupWidth = plotW / Math.max(1, geometry.count);
+        const barWidth = Math.max(10, Math.min(42, (groupWidth * 0.72) / Math.max(1, pointsBySeries.length)));
+        const denominator = Math.max(1e-9, scale.maxY - scale.minY);
+        const baseY = geometry.margin.top + ((scale.maxY - 0) / denominator) * plotH;
+
+        points.forEach(point => {
+          const offset = ((seriesIndex - (pointsBySeries.length - 1) / 2) * barWidth);
+          const x = point.x - barWidth / 2 + offset;
+          const y = point.y;
+          const top = Math.min(y, baseY);
+          const barHeight = Math.abs(baseY - y);
+          const isActive = point.index === geometry.activeIndex;
+
+          ctx.save();
+          ctx.fillStyle = series.barFill || series.color;
+          ctx.globalAlpha = isActive ? 0.95 : 0.78;
+          roundRect(ctx, x, top, barWidth, Math.max(barHeight, 1), 8);
+          ctx.fill();
+          ctx.restore();
+        });
+      }
+    });
+  }
+
+  function drawOverlay(ctx, geometry, width, height, readoutEl) {
+    const activeIndex = geometry.activeIndex;
+    if (activeIndex == null || activeIndex < 0) return;
+
+    const firstSeriesPoint = geometry.pointsBySeries[0] && geometry.pointsBySeries[0][activeIndex];
+    if (!firstSeriesPoint) return;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(firstSeriesPoint.x, geometry.margin.top);
+    ctx.lineTo(firstSeriesPoint.x, height - geometry.margin.bottom);
+    ctx.strokeStyle = 'rgba(16,32,51,.18)';
+    ctx.setLineDash([5, 5]);
+    ctx.stroke();
+    ctx.restore();
+
+    if (readoutEl) {
+      const parts = geometry.series.map((series, idx) => {
+        const value = series.values[activeIndex];
+        return `${series.label}: ${numberFormatter(value)}`;
+      });
+      readoutEl.textContent = `Termo n = ${geometry.labels[activeIndex] ?? activeIndex + 1} • ${parts.join(' • ')} • escala ${geometry.scale.modeLabel}`;
+    }
+  }
+
+  function roundRect(ctx, x, y, width, height, radius) {
+    const r = Math.max(0, Math.min(radius, width / 2, height / 2));
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + width, y, x + width, y + height, r);
+    ctx.arcTo(x + width, y + height, x, y + height, r);
+    ctx.arcTo(x, y + height, x, y, r);
+    ctx.arcTo(x, y, x + width, y, r);
+    ctx.closePath();
+  }
+
+  function renderLegend(legendEl, series) {
+    if (!legendEl) return;
+    legendEl.innerHTML = series.map((item, index) => {
+      const tone = index === 0 ? 'primary' : index === 1 ? 'accent' : 'success';
+      return `<span class="legend-chip" data-tone="${tone}" style="--legend-color:${item.color}">${item.label}</span>`;
+    }).join('');
+    legendEl.querySelectorAll('.legend-chip').forEach((chip, idx) => {
+      chip.style.color = series[idx].color;
+    });
+  }
+
+  function findNearestPoint(geometry, mouseX, mouseY) {
+    let nearest = null;
+    geometry.pointsBySeries.forEach(points => {
+      points.forEach(point => {
+        const distance = Math.hypot(point.x - mouseX, point.y - mouseY);
+        if (!nearest || distance < nearest.distance) {
+          nearest = { ...point, distance };
+        }
+      });
+    });
+    return nearest && nearest.distance <= 28 ? nearest : null;
+  }
+
+  function updateTooltip(state, point, mouse, geometry) {
+    const tooltip = state.tooltipEl;
+    if (!tooltip) return;
+    if (!point) {
+      tooltip.hidden = true;
+      return;
+    }
+
+    const lines = geometry.series.map((series, index) => {
+      const raw = series.values[point.index];
+      return `<small>${series.label}: ${numberFormatter(raw)}</small>`;
+    }).join('');
+
+    tooltip.innerHTML = `<strong>Termo n = ${geometry.labels[point.index] ?? point.index + 1}</strong>${lines}<small>Escala: ${geometry.scale.modeLabel}</small>`;
+    tooltip.hidden = false;
+    tooltip.style.left = `${Math.min(mouse.x, geometry.width - 190)}px`;
+    tooltip.style.top = `${Math.max(18, mouse.y)}px`;
+  }
+
+  function redraw(state) {
+    const canvas = state.canvas;
+    if (!canvas || !state.series.length) {
+      const ctx = canvas ? canvas.getContext('2d') : null;
+      if (ctx) {
+        const metrics = getCanvasMetrics(canvas);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, metrics.width, metrics.height);
+      }
+      if (state.readoutEl) state.readoutEl.textContent = 'Sem dados para o gráfico.';
+      if (state.tooltipEl) state.tooltipEl.hidden = true;
+      renderLegend(state.legendEl, []);
+      return;
+    }
+
+    const metrics = getCanvasMetrics(canvas);
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(metrics.ratio, metrics.ratio);
+
+    const width = metrics.cssWidth;
+    const height = metrics.cssHeight;
+
+    const geometry = buildPoints(state, width, height);
+    geometry.series = state.series;
+    geometry.chartType = state.chartType;
+    geometry.labels = state.labels;
+    geometry.activeIndex = state.activeIndex;
+    geometry.width = width;
+    geometry.height = height;
+
+    ctx.clearRect(0, 0, width, height);
+    drawGrid(ctx, geometry, width, height);
+    drawAxes(ctx, geometry, width, height);
+    drawLines(ctx, geometry);
+    drawOverlay(ctx, geometry, width, height, state.readoutEl);
+
+    renderLegend(state.legendEl, state.series);
+    state.lastGeometry = geometry;
+  }
+
+  function attachEvents(state) {
+    if (state.isBound) return;
+    state.isBound = true;
+
+    state.canvas.addEventListener('mousemove', event => {
+      if (!state.lastGeometry) return;
+      const rect = state.canvas.getBoundingClientRect();
+      const mouse = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+      const point = findNearestPoint(state.lastGeometry, mouse.x, mouse.y);
+      state.activeIndex = point ? point.index : state.activeIndex;
+      updateTooltip(state, point, mouse, state.lastGeometry);
+      redraw(state);
+      if (point && typeof state.onSelect === 'function') state.onSelect(point.index, { silentTable: false, fromChart: true });
+    });
+
+    state.canvas.addEventListener('mouseleave', () => {
+      if (state.tooltipEl) state.tooltipEl.hidden = true;
+    });
+
+    state.canvas.addEventListener('keydown', event => {
+      const count = Math.max(...state.series.map(s => s.values.length), 0);
+      if (!count) return;
+      if (state.activeIndex == null) state.activeIndex = 0;
+      if (event.key === 'ArrowRight') {
+        state.activeIndex = Math.min(count - 1, state.activeIndex + 1);
+        redraw(state);
+        if (typeof state.onSelect === 'function') state.onSelect(state.activeIndex, { fromChart: true });
+        event.preventDefault();
+      } else if (event.key === 'ArrowLeft') {
+        state.activeIndex = Math.max(0, state.activeIndex - 1);
+        redraw(state);
+        if (typeof state.onSelect === 'function') state.onSelect(state.activeIndex, { fromChart: true });
+        event.preventDefault();
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (registry.has(state.canvas.id)) redraw(state);
+    });
+  }
+
+  const ChartEngine = {
+    configure(canvasId, config) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const state = registry.get(canvasId) || {
+        canvas,
+        tooltipEl: document.getElementById(config.tooltipId),
+        legendEl: document.getElementById(config.legendId),
+        readoutEl: document.getElementById(config.readoutId),
+        labels: [],
+        series: [],
+        chartType: 'line',
+        scaleMode: 'auto',
+        activeIndex: null,
+        onSelect: null,
+        lastGeometry: null
+      };
+
+      state.tooltipEl = document.getElementById(config.tooltipId);
+      state.legendEl = document.getElementById(config.legendId);
+      state.readoutEl = document.getElementById(config.readoutId);
+      state.labels = config.labels || [];
+      state.series = (config.series || []).filter(item => Array.isArray(item.values));
+      state.chartType = config.chartType || 'line';
+      state.scaleMode = config.scaleMode || 'auto';
+      state.activeIndex = typeof config.activeIndex === 'number' ? config.activeIndex : state.activeIndex;
+      state.onSelect = config.onSelect || null;
+
+      registry.set(canvasId, state);
+      attachEvents(state);
+      redraw(state);
+    },
+
+    highlight(canvasId, index) {
+      const state = registry.get(canvasId);
+      if (!state) return;
+      state.activeIndex = typeof index === 'number' ? index : null;
+      redraw(state);
+    },
+
+    clear(canvasId) {
+      const state = registry.get(canvasId);
+      if (!state) return;
+      state.labels = [];
+      state.series = [];
+      state.activeIndex = null;
+      redraw(state);
+    }
+  };
+
+  window.ChartEngine = ChartEngine;
+})();
+</script>
+  <script>
+(function () {
+  const AppState = {
+    pa: { rows: [], headers: [], values: [], labels: [], activeIndex: null, mode: 'numeric' },
+    pg: { rows: [], headers: [], values: [], labels: [], activeIndex: null, mode: 'numeric' },
+    ph: { rows: [], headers: [], values: [], labels: [], activeIndex: null, mode: 'numeric' },
+    analysis: { rows: [], headers: [], values: [], labels: [], activeIndex: null, kind: null, params: null },
+    compare: { rows: [], headers: [], labels: [], series: [], activeIndex: null, selected: [] },
+    chartSettings: {
+      pa: { scale: 'linear', type: 'line' },
+      pg: { scale: 'auto', type: 'line' },
+      ph: { scale: 'linear', type: 'line' },
+      analysis: { scale: 'auto', type: 'line' },
+      compare: { scale: 'auto', type: 'line' }
+    }
+  };
+
+  const Colors = {
+    pa: '#1459d9',
+    pg: '#0c9bb4',
+    ph: '#7b4dd8'
+  };
+
+  const Utils = {
+    clampTermCount(value, min = 1) {
+      const n = Number(value);
+      if (!Number.isFinite(n)) return Math.max(min, 10);
+      return Math.max(min, Math.min(100, Math.round(n)));
+    },
+
+    normalizeText(value) {
+      return String(value ?? '')
+        .replace(/−/g, '-')
+        .replace(/\u2212/g, '-')
+        .trim();
+    },
+
+    isLikelySymbolic(expr) {
+      let s = Utils.normalizeText(expr);
+      if (!s) return false;
+      s = s.replace(/\bMath\./g, '');
+      s = s.replace(/\b(pi|sqrt|raiz|abs|sin|cos|tan|log|ln|exp)\b/gi, '');
+      s = s.replace(/\b\d+(?:\.\d+)?e[+\-]?\d+\b/gi, '');
+      s = s.replace(/[\d\s+\-*/^().,π]/g, '');
+      return /[A-Za-zÀ-ÿα-ωΑ-Ω_]/.test(s);
+    },
+
+    evalNumericExpression(expr) {
+      let s = Utils.normalizeText(expr);
+      if (!s) throw new Error('Campo vazio.');
+      if (Utils.isLikelySymbolic(s)) throw new Error('expressão simbólica');
+      s = s.replace(/,/g, '.');
+      s = s.replace(/π/gi, 'pi');
+      if (!/^[0-9+\-*/^().\s,eipqrtazlncsoMthabx]+$/i.test(s)) {
+        throw new Error('Expressão inválida.');
+      }
+      s = s.replace(/\braiz\s*\(/gi, 'Math.sqrt(')
+        .replace(/\bsqrt\s*\(/gi, 'Math.sqrt(')
+        .replace(/\bpi\b/gi, 'Math.PI')
+        .replace(/\be\b/g, 'Math.E')
+        .replace(/\babs\s*\(/gi, 'Math.abs(')
+        .replace(/\blog\s*\(/gi, 'Math.log10(')
+        .replace(/\bln\s*\(/gi, 'Math.log(')
+        .replace(/\bexp\s*\(/gi, 'Math.exp(')
+        .replace(/\^/g, '**');
+      const value = Function('"use strict"; return (' + s + ');')();
+      if (!Number.isFinite(value)) throw new Error('Valor não finito.');
+      return value;
+    },
+
+    formatNumber(value) {
+      if (!Number.isFinite(value)) return 'indefinido';
+      const abs = Math.abs(value);
+      if ((abs >= 1e12) || (abs > 0 && abs < 1e-6)) {
+        return value.toExponential(4).replace('.', ',');
+      }
+      return value.toLocaleString('pt-BR', { maximumFractionDigits: 6, minimumFractionDigits: 0 });
+    },
+
+
+    normalizeInputDisplay(value) {
+      const s = Utils.normalizeText(value);
+      if (!s) return '';
+      if (/\//.test(s) || /π|pi|raiz|sqrt|abs|log|ln|exp|\^|[A-Za-zÀ-ÿα-ωΑ-Ω_]/i.test(s)) return s;
+      const compact = s.replace(/\s+/g, '');
+      if (!/^[+\-]?\d+(?:[\.,]\d+)?$/.test(compact)) return s;
+      const number = Number(compact.replace(',', '.'));
+      if (!Number.isFinite(number)) return s;
+      return number.toLocaleString('pt-BR', { useGrouping: false, maximumFractionDigits: 12 });
+    },
+
+    wrapSymbol(expr) {
+      const s = Utils.normalizeText(expr);
+      if (/^[A-Za-zÀ-ÿα-ωΑ-Ω_][A-Za-zÀ-ÿα-ωΑ-Ω_\d]*$/.test(s)) return s;
+      if (/^\(.*\)$/.test(s)) return s;
+      return '(' + s + ')';
+    },
+
+    literalMul(coef, expr) {
+      const base = Utils.wrapSymbol(expr);
+      if (coef === 0) return '0';
+      if (coef === 1) return base;
+      if (coef === -1) return '-' + base;
+      return coef + '·' + base;
+    },
+
+    buildCumulative(values) {
+      let sum = 0;
+      return values.map(value => (sum += value));
+    },
+
+    paSymbolTerm(a1, r, indexZeroBased) {
+      if (indexZeroBased === 0) return a1;
+      if (indexZeroBased === 1) return a1 + ' + ' + Utils.wrapSymbol(r);
+      return a1 + ' + ' + indexZeroBased + '·' + Utils.wrapSymbol(r);
+    },
+
+    pgSymbolTerm(a1, q, indexZeroBased) {
+      if (indexZeroBased === 0) return a1;
+      if (indexZeroBased === 1) return Utils.wrapSymbol(a1) + '·' + Utils.wrapSymbol(q);
+      return Utils.wrapSymbol(a1) + '·' + Utils.wrapSymbol(q) + '<sup>' + indexZeroBased + '</sup>';
+    },
+
+    phDenominatorSymbol(h1, r, indexOneBased) {
+      const d1 = '1/' + Utils.wrapSymbol(h1);
+      if (indexOneBased === 1) return d1;
+      return d1 + ' + ' + Utils.literalMul(indexOneBased - 1, r);
+    },
+
+    phSymbolTerm(h1, r, indexOneBased) {
+      return '1/[' + Utils.phDenominatorSymbol(h1, r, indexOneBased) + ']';
+    },
+
+    literalPAClosed(a1, r, n) {
+      if (n <= 1) return Utils.wrapSymbol(a1);
+      return Utils.wrapSymbol(a1) + ' + ' + Utils.literalMul(n - 1, r);
+    },
+
+    literalPASum(a1, r, n) {
+      if (n <= 1) return Utils.wrapSymbol(a1);
+      const core = '2·' + Utils.wrapSymbol(a1) + ' + ' + Utils.literalMul(n - 1, r);
+      return n % 2 === 0 ? (n / 2) + '[' + core + ']' : n + '[' + core + ']/2';
+    },
+
+    literalPGClosed(a1, q, n) {
+      if (n <= 1) return Utils.wrapSymbol(a1);
+      if (n === 2) return Utils.wrapSymbol(a1) + '·' + Utils.wrapSymbol(q);
+      return Utils.wrapSymbol(a1) + '·' + Utils.wrapSymbol(q) + '<sup>' + (n - 1) + '</sup>';
+    },
+
+    literalPGSum(a1, q, n) {
+      return Utils.wrapSymbol(a1) + '(' + Utils.wrapSymbol(q) + '<sup>' + n + '</sup> - 1)/(' + Utils.wrapSymbol(q) + ' - 1)';
+    },
+
+    literalPreviewPA(a1, r, total) {
+      const limit = Math.min(total, 6);
+      const items = [];
+      for (let i = 1; i <= limit; i++) items.push('a<sub>' + i + '</sub> = ' + Utils.literalPAClosed(a1, r, i));
+      if (total > limit) items.push('...');
+      items.push('a<sub>' + total + '</sub> = ' + Utils.literalPAClosed(a1, r, total));
+      return items.join(' &nbsp; → &nbsp; ');
+    },
+
+    literalPreviewPG(a1, q, total) {
+      const limit = Math.min(total, 6);
+      const items = [];
+      for (let i = 1; i <= limit; i++) items.push('a<sub>' + i + '</sub> = ' + Utils.literalPGClosed(a1, q, i));
+      if (total > limit) items.push('...');
+      items.push('a<sub>' + total + '</sub> = ' + Utils.literalPGClosed(a1, q, total));
+      return items.join(' &nbsp; → &nbsp; ');
+    },
+
+    literalPreviewPH(h1, r, total) {
+      const limit = Math.min(total, 6);
+      const items = [];
+      for (let i = 1; i <= limit; i++) items.push('H<sub>' + i + '</sub> = ' + Utils.phSymbolTerm(h1, r, i));
+      if (total > limit) items.push('...');
+      items.push('H<sub>' + total + '</sub> = ' + Utils.phSymbolTerm(h1, r, total));
+      return items.join(' &nbsp; → &nbsp; ');
+    },
+
+    parseManualTerms(text) {
+      let source = Utils.normalizeText(text);
+      if (!source) throw new Error('Digite pelo menos 3 termos.');
+      const placeholder = '§DEC§';
+      let previous = '';
+      while (previous !== source) {
+        previous = source;
+        source = source.replace(/(\d),(\d)/g, '$1' + placeholder + '$2');
+      }
+      const parts = source
+        .split(/[;,\n]+/)
+        .map(s => s.split(placeholder).join(',').trim())
+        .filter(Boolean);
+      if (parts.length < 3) throw new Error('Digite pelo menos 3 termos.');
+      return parts.map(Utils.evalNumericExpression);
+    },
+
+    almostEqual(a, b, eps = 1e-9) {
+      return Math.abs(a - b) <= eps * Math.max(1, Math.abs(a), Math.abs(b));
+    },
+
+    htmlToPlain(value) {
+      const temp = document.createElement('div');
+      temp.innerHTML = String(value).replace(/<sup>(.*?)<\/sup>/gi, '^$1').replace(/<sub>(.*?)<\/sub>/gi, '_$1');
+      return temp.textContent || temp.innerText || '';
+    },
+
+    computePH(h1, r, n) {
+      if (Utils.almostEqual(h1, 0)) throw new Error('O primeiro termo h₁ da P.H. não pode ser zero.');
+      const d1 = 1 / h1;
+      const denominators = [];
+      const terms = [];
+      for (let i = 0; i < n; i++) {
+        const denominator = d1 + i * r;
+        if (Utils.almostEqual(denominator, 0)) {
+          throw new Error('A P.H. fica indefinida no termo ' + (i + 1) + ', pois o denominador da P.A. associada zera.');
+        }
+        denominators.push(denominator);
+        terms.push(1 / denominator);
+      }
+      return { d1, denominators, terms, partials: Utils.buildCumulative(terms) };
+    },
+
+    describePH(terms, denominators, r) {
+      if (r === 0) return { classification: 'constante', reading: 'A P.A. associada fica constante; por isso todos os termos harmônicos também ficam iguais.' };
+      const first = terms[0];
+      const last = terms[terms.length - 1];
+      const sameSign = denominators.every(d => Math.sign(d) === Math.sign(denominators[0]));
+      if (!sameSign) return { classification: 'com mudança de sinal', reading: 'A P.A. associada troca de sinal ao longo do intervalo; a P.H. atravessa regiões com comportamento contrastante.' };
+      if (last > first) return { classification: 'crescente', reading: 'Dentro do intervalo gerado, os termos harmônicos aumentam.' };
+      if (last < first) return { classification: 'decrescente', reading: 'Dentro do intervalo gerado, os termos harmônicos diminuem.' };
+      return { classification: 'quase constante', reading: 'Os termos ficaram muito próximos entre si no intervalo observado.' };
+    },
+
+    getSectionIds(sectionKey) {
+      return {
+        formula: sectionKey === 'compare' ? 'compareSummary' : sectionKey === 'analysis' ? 'analysisFormulaGrid' : sectionKey + 'FormulaGrid',
+        insights: sectionKey === 'compare' ? 'compareInsights' : sectionKey === 'analysis' ? 'analysisInsights' : sectionKey + 'Insights',
+        legend: sectionKey === 'compare' ? 'compareLegend' : sectionKey === 'analysis' ? 'analysisLegend' : sectionKey + 'Legend',
+        terms: sectionKey === 'compare' ? 'compareTermsBox' : sectionKey === 'analysis' ? 'analysisTermsBox' : sectionKey + 'TermsBox',
+        readout: sectionKey === 'compare' ? 'compareChartReadout' : sectionKey === 'analysis' ? 'analysisChartReadout' : sectionKey + 'ChartReadout',
+        canvas: sectionKey === 'compare' ? 'compareCanvas' : sectionKey === 'analysis' ? 'analysisCanvas' : sectionKey + 'Canvas',
+        tooltip: sectionKey === 'compare' ? 'compareTooltip' : sectionKey === 'analysis' ? 'analysisTooltip' : sectionKey + 'Tooltip',
+        search: sectionKey + 'Search'
+      };
+    },
+
+    compareSelections() {
+      return [
+        document.getElementById('cmp_show_pa')?.checked ? 'pa' : null,
+        document.getElementById('cmp_show_pg')?.checked ? 'pg' : null,
+        document.getElementById('cmp_show_ph')?.checked ? 'ph' : null
+      ].filter(Boolean);
+    }
+  };
+
+  window.AppUtils = Utils;
+
+  const UI = {
+    setMessage(id, html, type = '') {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.className = 'message' + (type ? ' ' + type : '');
+      el.innerHTML = html;
+    },
+
+    createFormulaCard(title, lines) {
+      return `<article class="formula-card"><p class="formula-title">${title}</p>${lines.map(line => `<div class="formula-line">${line}</div>`).join('')}</article>`;
+    },
+
+    createInsightCard(title, content) {
+      return `<article class="insight-card"><h4>${title}</h4><p>${content}</p></article>`;
+    },
+
+    createWideCard(title, content) {
+      return `<article class="formula-card" style="grid-column:1/-1"><p class="formula-title">${title}</p><div class="formula-line">${content}</div></article>`;
+    },
+
+    renderHTML(id, html) {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = html;
+    },
+
+    renderInteractiveTable(sectionKey, containerId, headers, rows) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const searchInput = document.getElementById(Utils.getSectionIds(sectionKey).search);
+      const query = Utils.normalizeText(searchInput ? searchInput.value : '').toLowerCase();
+
+      let html = '<table><thead><tr>';
+      html += headers.map((header, index) => `<th>${index === 0 ? '<span>n</span>' : header}</th>`).join('');
+      html += '</tr></thead><tbody>';
+
+      rows.forEach((row, rowIndex) => {
+        const searchText = row.map(cell => Utils.htmlToPlain(cell)).join(' ').toLowerCase();
+        const hidden = query && !searchText.includes(query);
+        const isActive = AppState[sectionKey].activeIndex === rowIndex;
+        html += `<tr data-row-index="${rowIndex}" class="${isActive ? 'is-active' : ''} ${hidden ? 'is-hidden' : ''}">`;
+        row.forEach((cell, cellIndex) => {
+          if (cellIndex === 0) html += `<td><button type="button" class="table-row-button" data-row-index="${rowIndex}" data-section="${sectionKey}">${cell}</button></td>`;
+          else html += `<td>${cell}</td>`;
+        });
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+      container.innerHTML = html;
+
+      container.onclick = event => {
+        const target = event.target.closest('[data-row-index]');
+        if (!target || !container.contains(target)) return;
+        const index = Number(target.getAttribute('data-row-index'));
+        UI.setActiveRow(sectionKey, index, true);
+      };
+    },
+
+    setActiveRow(sectionKey, index, syncChart = false) {
+      AppState[sectionKey].activeIndex = index;
+      const container = document.getElementById(Utils.getSectionIds(sectionKey).terms);
+      if (container) {
+        container.querySelectorAll('tbody tr').forEach(row => row.classList.toggle('is-active', Number(row.dataset.rowIndex) === index));
+      }
+      if (syncChart) {
+        window.ChartEngine.highlight(Utils.getSectionIds(sectionKey).canvas, index);
+      }
+    },
+
+    clearRender(sectionKey) {
+      const ids = Utils.getSectionIds(sectionKey);
+      [ids.formula, ids.insights, ids.legend, ids.terms].forEach(id => UI.renderHTML(id, ''));
+      const readout = document.getElementById(ids.readout);
+      if (readout) readout.textContent = 'Sem dados para exibir.';
+      window.ChartEngine.clear(ids.canvas);
+    },
+
+    bindSearch(sectionKey) {
+      const input = document.getElementById(Utils.getSectionIds(sectionKey).search);
+      if (!input) return;
+      input.addEventListener('input', () => {
+        const state = AppState[sectionKey];
+        if (state.rows && state.rows.length) {
+          UI.renderInteractiveTable(sectionKey, Utils.getSectionIds(sectionKey).terms, state.headers, state.rows);
+        }
+      });
+    }
+  };
+
+  const Charts = {
+    drawSection(sectionKey, config) {
+      const ids = Utils.getSectionIds(sectionKey);
+      const settings = AppState.chartSettings[sectionKey];
+      window.ChartEngine.configure(ids.canvas, {
+        labels: config.labels,
+        series: config.series,
+        scaleMode: settings.scale,
+        chartType: settings.type,
+        legendId: ids.legend,
+        tooltipId: ids.tooltip,
+        readoutId: ids.readout,
+        activeIndex: AppState[sectionKey].activeIndex,
+        onSelect: index => UI.setActiveRow(sectionKey, index, false)
+      });
+    }
+  };
+
+  const Exporters = {
+    downloadCanvas(canvasId, filename) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return alert('Gráfico não encontrado para exportação.');
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+
+    exportSectionCSV(section) {
+      const state = AppState[section];
+      if (!state || !state.rows || !state.rows.length) return alert('Não há dados gerados para exportar.');
+      const allRows = [state.headers, ...state.rows];
+      const csv = allRows.map(row => row.map(cell => '"' + Utils.htmlToPlain(cell).replace(/"/g, '""') + '"').join(';')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = section + '_progressao_profissional.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 100);
+    },
+
+    wrapCanvasText(ctx, text, maxWidth) {
+      const raw = String(text ?? '').replace(/\s+/g, ' ').trim();
+      if (!raw) return [''];
+      const words = raw.split(' ');
+      const lines = [];
+      let current = '';
+      for (const word of words) {
+        const test = current ? current + ' ' + word : word;
+        if (ctx.measureText(test).width <= maxWidth || !current) current = test;
+        else {
+          lines.push(current);
+          current = word;
+        }
+      }
+      if (current) lines.push(current);
+      return lines;
+    },
+
+    exportTablePNG(section, title) {
+      const state = AppState[section];
+      if (!state || !state.rows || !state.rows.length) return alert('Não há tabela gerada para exportar.');
+      const rows = [state.headers, ...state.rows].map(row => row.map(cell => Utils.htmlToPlain(cell)));
+      const measureCtx = document.createElement('canvas').getContext('2d');
+      const colCount = rows[0].length;
+      const widths = new Array(colCount).fill(150);
+      rows.forEach((row, rowIndex) => {
+        row.forEach((cell, colIndex) => {
+          measureCtx.font = (rowIndex === 0 ? 'bold 17px' : '15px') + ' Segoe UI';
+          widths[colIndex] = Math.max(widths[colIndex], Math.min(360, Math.ceil(measureCtx.measureText(String(cell)).width) + 34));
+        });
+      });
+      const prepared = rows.map((row, rowIndex) => row.map((cell, colIndex) => {
+        measureCtx.font = (rowIndex === 0 ? 'bold 17px' : '15px') + ' Segoe UI';
+        return Exporters.wrapCanvasText(measureCtx, cell, widths[colIndex] - 24);
+      }));
+      const rowHeights = prepared.map(linesPerCell => {
+        const maxLines = Math.max(...linesPerCell.map(lines => lines.length));
+        return Math.max(36, 14 + maxLines * 20);
+      });
+      const width = widths.reduce((a, b) => a + b, 0) + 40;
+      const titleHeight = 80;
+      const footerHeight = 28;
+      const height = titleHeight + rowHeights.reduce((a, b) => a + b, 0) + footerHeight + 20;
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      const bg = ctx.createLinearGradient(0, 0, 0, height);
+      bg.addColorStop(0, '#f8fbff');
+      bg.addColorStop(1, '#eaf1f8');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, width, height);
+      ctx.fillStyle = '#1459d9';
+      ctx.font = 'bold 28px Segoe UI';
+      ctx.fillText(title, 20, 42);
+      ctx.fillStyle = '#42546a';
+      ctx.font = '16px Segoe UI';
+      ctx.fillText('Laboratório Interativo de Progressões • exportação da tabela', 20, 66);
+      let y = titleHeight;
+      rows.forEach((row, rowIndex) => {
+        let x = 20;
+        const rowHeight = rowHeights[rowIndex];
+        ctx.fillStyle = rowIndex === 0 ? '#e8f0ff' : (rowIndex % 2 === 0 ? '#ffffff' : '#f7fbff');
+        ctx.fillRect(20, y, width - 40, rowHeight);
+        row.forEach((cell, colIndex) => {
+          const cellWidth = widths[colIndex];
+          ctx.strokeStyle = 'rgba(16,32,51,.12)';
+          ctx.strokeRect(x, y, cellWidth, rowHeight);
+          ctx.fillStyle = rowIndex === 0 ? '#1459d9' : '#102033';
+          ctx.font = (rowIndex === 0 ? 'bold 17px' : '15px') + ' Segoe UI';
+          prepared[rowIndex][colIndex].forEach((line, lineIndex) => ctx.fillText(line, x + 10, y + 22 + lineIndex * 20));
+          x += cellWidth;
+        });
+        y += rowHeight;
+      });
+      ctx.fillStyle = '#546579';
+      ctx.font = '14px Segoe UI';
+      ctx.fillText('Gerado offline no navegador.', 20, height - 12);
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = section + '_tabela_profissional.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  function renderSingleNumericSection(sectionKey, config) {
+    AppState[sectionKey].headers = config.headers;
+    AppState[sectionKey].rows = config.rows;
+    AppState[sectionKey].labels = config.labels;
+    AppState[sectionKey].values = config.values;
+    AppState[sectionKey].activeIndex = 0;
+    UI.renderHTML(Utils.getSectionIds(sectionKey).formula, config.formulas.join(''));
+    UI.renderHTML(Utils.getSectionIds(sectionKey).insights, config.insights.join(''));
+    UI.renderInteractiveTable(sectionKey, Utils.getSectionIds(sectionKey).terms, config.headers, config.rows);
+    Charts.drawSection(sectionKey, { labels: config.labels, series: config.series });
+    UI.setActiveRow(sectionKey, 0, true);
+  }
+
+  const Sections = {
+    runPA(forceN) {
+      const a1Text = document.getElementById('pa_a1').value;
+      const rText = document.getElementById('pa_r').value;
+      const n = Utils.clampTermCount(forceN ?? document.getElementById('pa_n').value);
+      document.getElementById('pa_n').value = n;
+      const numeric = !Utils.isLikelySymbolic(a1Text) && !Utils.isLikelySymbolic(rText);
+      AppState.pa.mode = numeric ? 'numeric' : 'symbolic';
+      document.getElementById('paModeChip').textContent = 'Modo: ' + (numeric ? 'numérico' : 'literal');
+
+      if (numeric) {
+        try {
+          const a1 = Utils.evalNumericExpression(a1Text);
+          const r = Utils.evalNumericExpression(rText);
+          const terms = Array.from({ length: n }, (_, i) => a1 + i * r);
+          const rows = terms.map((value, i) => [i + 1, Utils.formatNumber(value), Utils.formatNumber(((i + 1) * (2 * a1 + i * r)) / 2)]);
+          const an = a1 + (n - 1) * r;
+          const sn = (n * (2 * a1 + (n - 1) * r)) / 2;
+          const cls = r > 0 ? 'crescente' : r < 0 ? 'decrescente' : 'constante';
+          const behavior = r === 0 ? 'Todos os termos ficam iguais.' : r > 0 ? 'Cresce sempre pela mesma diferença.' : 'Decresce sempre pela mesma diferença.';
+          renderSingleNumericSection('pa', {
+            headers: ['n', 'termo', 'soma parcial'],
+            rows,
+            labels: rows.map(row => row[0]),
+            values: terms,
+            formulas: [
+              UI.createFormulaCard('Termo geral', [
+                '<strong>a<sub>n</sub> = a<sub>1</sub> + (n-1)r</strong>',
+                `<span class="dim">Substituindo:</span> a<sub>${n}</sub> = ${Utils.formatNumber(a1)} + (${n}-1)·${Utils.formatNumber(r)}`,
+                `<span class="dim">Resultado:</span> <strong>a<sub>${n}</sub> = ${Utils.formatNumber(an)}</strong>`
+              ]),
+              UI.createFormulaCard('Soma dos n primeiros termos', [
+                '<strong>S<sub>n</sub> = n[2a<sub>1</sub> + (n-1)r]/2</strong>',
+                `<span class="dim">Substituindo:</span> S<sub>${n}</sub> = ${n}[2·${Utils.formatNumber(a1)} + (${n}-1)·${Utils.formatNumber(r)}]/2`,
+                `<span class="dim">Resultado:</span> <strong>S<sub>${n}</sub> = ${Utils.formatNumber(sn)}</strong>`
+              ])
+            ],
+            insights: [
+              UI.createInsightCard('Classificação', cls),
+              UI.createInsightCard('Razão r', Utils.formatNumber(r)),
+              UI.createInsightCard('Leitura', behavior)
+            ],
+            series: [{ label: 'P.A.', color: Colors.pa, fill: 'rgba(20,89,217,.18)', values: terms }]
+          });
+          UI.setMessage('paMessage', `P.A. gerada com <strong>${n} termos</strong>. A leitura visual destaca o termo selecionado também na tabela.`, 'good');
+        } catch (error) {
+          AppState.pa = { rows: [], headers: [], values: [], labels: [], activeIndex: null, mode: AppState.pa.mode };
+          UI.clearRender('pa');
+          UI.setMessage('paMessage', 'Não foi possível interpretar os valores numéricos: ' + error.message, 'bad');
+        }
+        return;
+      }
+
+      const a1 = Utils.normalizeText(a1Text) || 'a₁';
+      const r = Utils.normalizeText(rText) || 'r';
+      const rows = Array.from({ length: n }, (_, i) => [i + 1, Utils.paSymbolTerm(a1, r, i), 'S' + (i + 1) + ' = ' + Utils.literalPASum(a1, r, i + 1)]);
+      AppState.pa.headers = ['n', 'termo', 'expressão'];
+      AppState.pa.rows = rows;
+      AppState.pa.labels = rows.map(row => row[0]);
+      AppState.pa.values = [];
+      AppState.pa.activeIndex = null;
+      UI.renderHTML('paFormulaGrid', [
+        UI.createFormulaCard('Termo geral', [
+          '<strong>a<sub>n</sub> = a<sub>1</sub> + (n-1)r</strong>',
+          `<span class="dim">Forma literal:</span> a<sub>n</sub> = ${Utils.wrapSymbol(a1)} + (n-1)·${Utils.wrapSymbol(r)}`,
+          `<span class="dim">Exemplo:</span> a<sub>${n}</sub> = ${Utils.literalPAClosed(a1, r, n)}`
+        ]),
+        UI.createFormulaCard('Soma dos n primeiros termos', [
+          '<strong>S<sub>n</sub> = n[2a<sub>1</sub> + (n-1)r]/2</strong>',
+          `<span class="dim">Exemplo:</span> S<sub>${n}</sub> = ${Utils.literalPASum(a1, r, n)}`,
+          '<span class="dim">Modo:</span> leitura algébrica visual'
+        ]),
+        UI.createWideCard('Fluxo algébrico da P.A.', Utils.literalPreviewPA(a1, r, n))
+      ].join(''));
+      UI.renderHTML('paInsights', [
+        UI.createInsightCard('Modo', 'literal / simbólico'),
+        UI.createInsightCard('Razão r', Utils.wrapSymbol(r)),
+        UI.createInsightCard('Tabela', n + ' termos simbólicos')
+      ].join(''));
+      UI.renderInteractiveTable('pa', 'paTermsBox', AppState.pa.headers, rows);
+      window.ChartEngine.clear('paCanvas');
+      document.getElementById('paChartReadout').textContent = 'Modo literal: gráfico numérico indisponível.';
+      UI.setMessage('paMessage', `P.A. literal gerada com <strong>${n} termos</strong>. A tabela e as fórmulas foram mantidas em leitura simbólica.`, 'warn');
+    },
+
+    runPG(forceN) {
+      const a1Text = document.getElementById('pg_a1').value;
+      const qText = document.getElementById('pg_q').value;
+      const n = Utils.clampTermCount(forceN ?? document.getElementById('pg_n').value);
+      document.getElementById('pg_n').value = n;
+      const numeric = !Utils.isLikelySymbolic(a1Text) && !Utils.isLikelySymbolic(qText);
+      AppState.pg.mode = numeric ? 'numeric' : 'symbolic';
+      document.getElementById('pgModeChip').textContent = 'Modo: ' + (numeric ? 'numérico' : 'literal');
+
+      if (numeric) {
+        try {
+          const a1 = Utils.evalNumericExpression(a1Text);
+          const q = Utils.evalNumericExpression(qText);
+          const terms = Array.from({ length: n }, (_, i) => a1 * Math.pow(q, i));
+          const rows = terms.map((value, i) => {
+            const idx = i + 1;
+            const sum = q === 1 ? a1 * idx : (a1 * (Math.pow(q, idx) - 1)) / (q - 1);
+            return [idx, Utils.formatNumber(value), Utils.formatNumber(sum)];
+          });
+          const an = a1 * Math.pow(q, n - 1);
+          const sn = q === 1 ? a1 * n : (a1 * (Math.pow(q, n) - 1)) / (q - 1);
+          let cls = 'constante';
+          let behavior = 'Todos os termos ficam iguais.';
+          if (q === 0) {
+            cls = 'nula a partir do 2º termo';
+            behavior = 'Depois do primeiro termo, os demais ficam nulos.';
+          } else if (q > 1) {
+            cls = 'crescimento multiplicativo';
+            behavior = 'Cada etapa multiplica o valor, acelerando o crescimento.';
+          } else if (q > 0 && q < 1) {
+            cls = 'decrescente / convergente';
+            behavior = 'Os termos diminuem em módulo e podem tender a zero.';
+          } else if (q < 0) {
+            cls = 'alternante';
+            behavior = 'Os sinais alternam por causa da razão negativa.';
+          }
+          renderSingleNumericSection('pg', {
+            headers: ['n', 'termo', 'soma parcial'],
+            rows,
+            labels: rows.map(row => row[0]),
+            values: terms,
+            formulas: [
+              UI.createFormulaCard('Termo geral', [
+                '<strong>a<sub>n</sub> = a<sub>1</sub>·q<sup>n-1</sup></strong>',
+                `<span class="dim">Substituindo:</span> a<sub>${n}</sub> = ${Utils.formatNumber(a1)}·${Utils.formatNumber(q)}<sup>${n - 1}</sup>`,
+                `<span class="dim">Resultado:</span> <strong>a<sub>${n}</sub> = ${Utils.formatNumber(an)}</strong>`
+              ]),
+              UI.createFormulaCard('Somatórios', [
+                '<strong>S<sub>n</sub> = a<sub>1</sub>(q<sup>n</sup>-1)/(q-1), q ≠ 1</strong>',
+                q === 1 ? `<span class="dim">Caso especial:</span> <strong>S<sub>${n}</sub> = ${Utils.formatNumber(sn)}</strong>` : `<span class="dim">Resultado:</span> <strong>S<sub>${n}</sub> = ${Utils.formatNumber(sn)}</strong>`,
+                Math.abs(q) < 1 ? `<span class="dim">Soma infinita:</span> <strong>S<sub>∞</sub> = ${Utils.formatNumber(a1 / (1 - q))}</strong>` : '<span class="dim">Soma infinita:</span> não existe para |q| ≥ 1'
+              ])
+            ],
+            insights: [
+              UI.createInsightCard('Classificação', cls),
+              UI.createInsightCard('Razão q', Utils.formatNumber(q)),
+              UI.createInsightCard('Leitura', behavior)
+            ],
+            series: [{ label: 'P.G.', color: Colors.pg, fill: 'rgba(12,155,180,.18)', values: terms }]
+          });
+          UI.setMessage('pgMessage', `P.G. gerada com <strong>${n} termos</strong>. Alterne entre escala linear e log para comparar leituras diferentes do mesmo crescimento.`, 'good');
+        } catch (error) {
+          AppState.pg = { rows: [], headers: [], values: [], labels: [], activeIndex: null, mode: AppState.pg.mode };
+          UI.clearRender('pg');
+          UI.setMessage('pgMessage', 'Não foi possível interpretar os valores numéricos: ' + error.message, 'bad');
+        }
+        return;
+      }
+
+      const a1 = Utils.normalizeText(a1Text) || 'a₁';
+      const q = Utils.normalizeText(qText) || 'q';
+      const rows = Array.from({ length: n }, (_, i) => [i + 1, Utils.pgSymbolTerm(a1, q, i), 'S' + (i + 1) + ' = ' + Utils.literalPGSum(a1, q, i + 1)]);
+      AppState.pg.headers = ['n', 'termo', 'expressão'];
+      AppState.pg.rows = rows;
+      AppState.pg.labels = rows.map(row => row[0]);
+      AppState.pg.values = [];
+      AppState.pg.activeIndex = null;
+      UI.renderHTML('pgFormulaGrid', [
+        UI.createFormulaCard('Termo geral', [
+          '<strong>a<sub>n</sub> = a<sub>1</sub>·q<sup>n-1</sup></strong>',
+          `<span class="dim">Forma literal:</span> a<sub>n</sub> = ${Utils.wrapSymbol(a1)}·${Utils.wrapSymbol(q)}<sup>n-1</sup>`,
+          `<span class="dim">Exemplo:</span> a<sub>${n}</sub> = ${Utils.literalPGClosed(a1, q, n)}`
+        ]),
+        UI.createFormulaCard('Somatórios', [
+          '<strong>S<sub>n</sub> = a<sub>1</sub>(q<sup>n</sup>-1)/(q-1)</strong>',
+          `<span class="dim">Exemplo:</span> S<sub>${n}</sub> = ${Utils.literalPGSum(a1, q, n)}`,
+          '<span class="dim">Modo:</span> leitura algébrica visual'
+        ]),
+        UI.createWideCard('Fluxo algébrico da P.G.', Utils.literalPreviewPG(a1, q, n))
+      ].join(''));
+      UI.renderHTML('pgInsights', [
+        UI.createInsightCard('Modo', 'literal / simbólico'),
+        UI.createInsightCard('Razão q', Utils.wrapSymbol(q)),
+        UI.createInsightCard('Tabela', n + ' termos simbólicos')
+      ].join(''));
+      UI.renderInteractiveTable('pg', 'pgTermsBox', AppState.pg.headers, rows);
+      window.ChartEngine.clear('pgCanvas');
+      document.getElementById('pgChartReadout').textContent = 'Modo literal: gráfico numérico indisponível.';
+      UI.setMessage('pgMessage', `P.G. literal gerada com <strong>${n} termos</strong>. A tabela e as fórmulas foram mantidas em leitura simbólica.`, 'warn');
+    },
+
+    runPH(forceN) {
+      const h1Text = document.getElementById('ph_h1').value;
+      const rText = document.getElementById('ph_r').value;
+      const n = Utils.clampTermCount(forceN ?? document.getElementById('ph_n').value);
+      document.getElementById('ph_n').value = n;
+      const numeric = !Utils.isLikelySymbolic(h1Text) && !Utils.isLikelySymbolic(rText);
+      AppState.ph.mode = numeric ? 'numeric' : 'symbolic';
+      document.getElementById('phModeChip').textContent = 'Modo: ' + (numeric ? 'numérico' : 'literal');
+
+      if (numeric) {
+        try {
+          const h1 = Utils.evalNumericExpression(h1Text);
+          const r = Utils.evalNumericExpression(rText);
+          const generated = Utils.computePH(h1, r, n);
+          const { d1, denominators, terms, partials } = generated;
+          const rows = terms.map((value, i) => [
+            i + 1,
+            Utils.formatNumber(value),
+            Utils.formatNumber(denominators[i]),
+            Utils.formatNumber(partials[i])
+          ]);
+          const desc = Utils.describePH(terms, denominators, r);
+          renderSingleNumericSection('ph', {
+            headers: ['n', 'termo Hₙ', 'denominador da P.A. associada', 'soma parcial'],
+            rows,
+            labels: rows.map(row => row[0]),
+            values: terms,
+            formulas: [
+              UI.createFormulaCard('Definição da P.H.', [
+                '<strong>H<sub>n</sub> = 1 / [D<sub>1</sub> + (n-1)r]</strong>',
+                `<span class="dim">Como D<sub>1</sub> = 1/h<sub>1</sub>, então:</span> H<sub>${n}</sub> = 1 / [${Utils.formatNumber(d1)} + (${n}-1)·${Utils.formatNumber(r)}]`,
+                `<span class="dim">Resultado:</span> <strong>H<sub>${n}</sub> = ${Utils.formatNumber(terms[n - 1])}</strong>`
+              ]),
+              UI.createFormulaCard('P.A. associada e soma acumulada', [
+                `<span class="dim">P.A. associada:</span> D<sub>n</sub> = ${Utils.formatNumber(d1)} + (n-1)·${Utils.formatNumber(r)}`,
+                `<span class="dim">Denominador em n = ${n}:</span> <strong>${Utils.formatNumber(denominators[n - 1])}</strong>`,
+                `<span class="dim">Soma acumulada até n = ${n}:</span> <strong>${Utils.formatNumber(partials[n - 1])}</strong>`
+              ])
+            ],
+            insights: [
+              UI.createInsightCard('Classificação', desc.classification),
+              UI.createInsightCard('Razão associada r', Utils.formatNumber(r)),
+              UI.createInsightCard('Leitura', desc.reading)
+            ],
+            series: [{ label: 'P.H.', color: Colors.ph, fill: 'rgba(123,77,216,.18)', values: terms }]
+          });
+          UI.setMessage('phMessage', `P.H. gerada com <strong>${n} termos</strong>. A tabela mostra o termo harmônico, o denominador associado e a soma acumulada.`, 'good');
+        } catch (error) {
+          AppState.ph = { rows: [], headers: [], values: [], labels: [], activeIndex: null, mode: AppState.ph.mode };
+          UI.clearRender('ph');
+          UI.setMessage('phMessage', 'Não foi possível interpretar os valores numéricos: ' + error.message, 'bad');
+        }
+        return;
+      }
+
+      const h1 = Utils.normalizeText(h1Text) || 'h₁';
+      const r = Utils.normalizeText(rText) || 'r';
+      const rows = Array.from({ length: n }, (_, i) => [
+        i + 1,
+        Utils.phSymbolTerm(h1, r, i + 1),
+        Utils.phDenominatorSymbol(h1, r, i + 1),
+        'soma acumulada até H' + (i + 1)
+      ]);
+      AppState.ph.headers = ['n', 'termo Hₙ', 'denominador associado', 'observação'];
+      AppState.ph.rows = rows;
+      AppState.ph.labels = rows.map(row => row[0]);
+      AppState.ph.values = [];
+      AppState.ph.activeIndex = null;
+      UI.renderHTML('phFormulaGrid', [
+        UI.createFormulaCard('Definição da P.H.', [
+          '<strong>H<sub>n</sub> = 1 / [D<sub>1</sub> + (n-1)r]</strong>',
+          `<span class="dim">Com D<sub>1</sub> = 1/${Utils.wrapSymbol(h1)}:</span> H<sub>n</sub> = 1/[1/${Utils.wrapSymbol(h1)} + (n-1)·${Utils.wrapSymbol(r)}]`,
+          `<span class="dim">Exemplo:</span> H<sub>${n}</sub> = ${Utils.phSymbolTerm(h1, r, n)}`
+        ]),
+        UI.createFormulaCard('P.A. associada', [
+          `<span class="dim">D<sub>n</sub> = D<sub>1</sub> + (n-1)r</span>`,
+          `<span class="dim">Aqui:</span> D<sub>n</sub> = ${Utils.phDenominatorSymbol(h1, r, n)}`,
+          '<span class="dim">Modo:</span> leitura algébrica visual'
+        ]),
+        UI.createWideCard('Fluxo algébrico da P.H.', Utils.literalPreviewPH(h1, r, n))
+      ].join(''));
+      UI.renderHTML('phInsights', [
+        UI.createInsightCard('Modo', 'literal / simbólico'),
+        UI.createInsightCard('Razão associada r', Utils.wrapSymbol(r)),
+        UI.createInsightCard('Tabela', n + ' termos simbólicos')
+      ].join(''));
+      UI.renderInteractiveTable('ph', 'phTermsBox', AppState.ph.headers, rows);
+      window.ChartEngine.clear('phCanvas');
+      document.getElementById('phChartReadout').textContent = 'Modo literal: gráfico numérico indisponível.';
+      UI.setMessage('phMessage', `P.H. literal gerada com <strong>${n} termos</strong>. A tabela e as fórmulas foram mantidas em leitura simbólica.`, 'warn');
+    },
+
+    analyzeManual() {
+      try {
+        const values = Utils.parseManualTerms(document.getElementById('manualTerms').value);
+        let isPA = true;
+        const r = values[1] - values[0];
+        for (let i = 1; i < values.length - 1; i++) {
+          if (!Utils.almostEqual(values[i + 1] - values[i], r)) { isPA = false; break; }
+        }
+        let isPG = values[0] !== 0;
+        const q = isPG ? values[1] / values[0] : NaN;
+        if (isPG) {
+          for (let i = 1; i < values.length - 1; i++) {
+            if (values[i] === 0 || !Utils.almostEqual(values[i + 1] / values[i], q)) { isPG = false; break; }
+          }
+        }
+        if (!isPA && !isPG) {
+          AppState.analysis = { rows: [], headers: [], values: [], labels: [], activeIndex: null, kind: null, params: null };
+          UI.clearRender('analysis');
+          UI.setMessage('analysisMessage', 'A sequência digitada não foi reconhecida como P.A. nem P.G. com base nos termos fornecidos.', 'bad');
+          return;
+        }
+        AppState.analysis.kind = isPA ? 'PA' : 'PG';
+        AppState.analysis.params = isPA ? { a1: values[0], r } : { a1: values[0], q };
+        const n = Utils.clampTermCount(document.getElementById('analysis_n').value, 3);
+        document.getElementById('analysis_n').value = n;
+        Sections.extendAnalysis(n);
+        UI.setMessage('analysisMessage', `Sequência identificada como <strong>${AppState.analysis.kind}</strong>. A extensão foi recalculada até ${n} termos.`, 'good');
+      } catch (error) {
+        UI.clearRender('analysis');
+        UI.setMessage('analysisMessage', error.message, 'bad');
+      }
+    },
+
+    extendAnalysis(n) {
+      if (!AppState.analysis.kind || !AppState.analysis.params) return UI.setMessage('analysisMessage', 'Analise uma sequência primeiro.', 'warn');
+      n = Utils.clampTermCount(n, 3);
+      if (AppState.analysis.kind === 'PA') {
+        const { a1, r } = AppState.analysis.params;
+        const terms = Array.from({ length: n }, (_, i) => a1 + i * r);
+        const rows = terms.map((value, i) => [i + 1, Utils.formatNumber(value)]);
+        AppState.analysis.headers = ['n', 'termo'];
+        AppState.analysis.rows = rows;
+        AppState.analysis.labels = rows.map(row => row[0]);
+        AppState.analysis.values = terms;
+        AppState.analysis.activeIndex = 0;
+        UI.renderHTML('analysisFormulaGrid', [
+          UI.createFormulaCard('Diagnóstico: P.A.', ['<strong>a<sub>n</sub> = a<sub>1</sub> + (n-1)r</strong>', `a<sub>1</sub> = ${Utils.formatNumber(a1)}`, `r = ${Utils.formatNumber(r)}`]),
+          UI.createFormulaCard('Leitura da extensão', [`a<sub>${n}</sub> = ${Utils.formatNumber(a1 + (n - 1) * r)}`, `S<sub>${n}</sub> = ${Utils.formatNumber((n * (2 * a1 + (n - 1) * r)) / 2)}`, 'Comportamento: crescimento linear'])
+        ].join(''));
+        UI.renderHTML('analysisInsights', [
+          UI.createInsightCard('Tipo', 'P.A.'),
+          UI.createInsightCard('Razão', Utils.formatNumber(r)),
+          UI.createInsightCard('Leitura', r >= 0 ? 'diferença constante positiva ou nula' : 'diferença constante negativa')
+        ].join(''));
+        UI.renderInteractiveTable('analysis', 'analysisTermsBox', AppState.analysis.headers, rows);
+        Charts.drawSection('analysis', { labels: AppState.analysis.labels, series: [{ label: 'P.A. identificada', color: Colors.pa, fill: 'rgba(20,89,217,.18)', values: terms }] });
+        UI.setActiveRow('analysis', 0, true);
+        return;
+      }
+      const { a1, q } = AppState.analysis.params;
+      const terms = Array.from({ length: n }, (_, i) => a1 * Math.pow(q, i));
+      const rows = terms.map((value, i) => [i + 1, Utils.formatNumber(value)]);
+      AppState.analysis.headers = ['n', 'termo'];
+      AppState.analysis.rows = rows;
+      AppState.analysis.labels = rows.map(row => row[0]);
+      AppState.analysis.values = terms;
+      AppState.analysis.activeIndex = 0;
+      UI.renderHTML('analysisFormulaGrid', [
+        UI.createFormulaCard('Diagnóstico: P.G.', ['<strong>a<sub>n</sub> = a<sub>1</sub>·q<sup>n-1</sup></strong>', `a<sub>1</sub> = ${Utils.formatNumber(a1)}`, `q = ${Utils.formatNumber(q)}`]),
+        UI.createFormulaCard('Leitura da extensão', [`a<sub>${n}</sub> = ${Utils.formatNumber(a1 * Math.pow(q, n - 1))}`, q === 1 ? `S<sub>${n}</sub> = ${Utils.formatNumber(a1 * n)}` : `S<sub>${n}</sub> = ${Utils.formatNumber((a1 * (Math.pow(q, n) - 1)) / (q - 1))}`, Math.abs(q) < 1 ? 'Comportamento: aproximação de zero' : 'Comportamento: crescimento ou alternância multiplicativa'])
+      ].join(''));
+      UI.renderHTML('analysisInsights', [
+        UI.createInsightCard('Tipo', 'P.G.'),
+        UI.createInsightCard('Razão', Utils.formatNumber(q)),
+        UI.createInsightCard('Leitura', q > 1 ? 'crescimento exponencial' : q < 0 ? 'alternância de sinais' : 'decaimento controlado')
+      ].join(''));
+      UI.renderInteractiveTable('analysis', 'analysisTermsBox', AppState.analysis.headers, rows);
+      Charts.drawSection('analysis', { labels: AppState.analysis.labels, series: [{ label: 'P.G. identificada', color: Colors.pg, fill: 'rgba(12,155,180,.18)', values: terms }] });
+      UI.setActiveRow('analysis', 0, true);
+    },
+
+    runCompare(forceN) {
+      const selected = Utils.compareSelections();
+      if (selected.length < 2) {
+        AppState.compare = { rows: [], headers: [], labels: [], series: [], activeIndex: null, selected: [] };
+        UI.clearRender('compare');
+        return UI.setMessage('compareMessage', 'Selecione pelo menos duas progressões para comparar.', 'warn');
+      }
+      try {
+        const n = Utils.clampTermCount(forceN ?? document.getElementById('cmp_n').value, 2);
+        document.getElementById('cmp_n').value = n;
+        const compareSeries = [];
+        if (selected.includes('pa')) {
+          const a1 = Utils.evalNumericExpression(document.getElementById('cmp_pa_a1').value);
+          const r = Utils.evalNumericExpression(document.getElementById('cmp_pa_r').value);
+          const values = Array.from({ length: n }, (_, i) => a1 + i * r);
+          compareSeries.push({ key: 'pa', label: 'P.A.', color: Colors.pa, fill: 'rgba(20,89,217,.16)', values, meta: { a1, r } });
+        }
+        if (selected.includes('pg')) {
+          const a1 = Utils.evalNumericExpression(document.getElementById('cmp_pg_a1').value);
+          const q = Utils.evalNumericExpression(document.getElementById('cmp_pg_q').value);
+          const values = Array.from({ length: n }, (_, i) => a1 * Math.pow(q, i));
+          compareSeries.push({ key: 'pg', label: 'P.G.', color: Colors.pg, fill: 'rgba(12,155,180,.16)', values, meta: { a1, q } });
+        }
+        if (selected.includes('ph')) {
+          const h1 = Utils.evalNumericExpression(document.getElementById('cmp_ph_h1').value);
+          const r = Utils.evalNumericExpression(document.getElementById('cmp_ph_r').value);
+          const generated = Utils.computePH(h1, r, n);
+          compareSeries.push({ key: 'ph', label: 'P.H.', color: Colors.ph, fill: 'rgba(123,77,216,.16)', values: generated.terms, meta: { h1, r, d1: generated.d1 } });
+        }
+
+        const headers = ['n', ...compareSeries.map(s => s.label), 'Maior no termo', 'Amplitude'];
+        const rows = Array.from({ length: n }, (_, i) => {
+          const valuesAtI = compareSeries.map(series => series.values[i]);
+          const maxValue = Math.max(...valuesAtI);
+          const minValue = Math.min(...valuesAtI);
+          const leader = compareSeries[valuesAtI.findIndex(v => Utils.almostEqual(v, maxValue))].label;
+          return [i + 1, ...valuesAtI.map(Utils.formatNumber), leader, Utils.formatNumber(maxValue - minValue)];
+        });
+
+        AppState.compare.headers = headers;
+        AppState.compare.rows = rows;
+        AppState.compare.labels = rows.map(row => row[0]);
+        AppState.compare.series = compareSeries;
+        AppState.compare.activeIndex = 0;
+        AppState.compare.selected = selected;
+
+        const summaryCards = compareSeries.map(series => {
+          if (series.key === 'pa') {
+            const { a1, r } = series.meta;
+            const last = series.values[n - 1];
+            const sum = (n * (2 * a1 + (n - 1) * r)) / 2;
+            return UI.createFormulaCard('P.A. comparada', [
+              `<span class="dim">Modelo:</span> a<sub>n</sub> = ${Utils.formatNumber(a1)} + (n-1)·${Utils.formatNumber(r)}`,
+              `<span class="dim">Termo ${n}:</span> ${Utils.formatNumber(last)}`,
+              `<span class="dim">Soma:</span> ${Utils.formatNumber(sum)}`
+            ]);
+          }
+          if (series.key === 'pg') {
+            const { a1, q } = series.meta;
+            const last = series.values[n - 1];
+            const sum = q === 1 ? a1 * n : (a1 * (Math.pow(q, n) - 1)) / (q - 1);
+            return UI.createFormulaCard('P.G. comparada', [
+              `<span class="dim">Modelo:</span> a<sub>n</sub> = ${Utils.formatNumber(a1)}·${Utils.formatNumber(q)}<sup>n-1</sup>`,
+              `<span class="dim">Termo ${n}:</span> ${Utils.formatNumber(last)}`,
+              `<span class="dim">Soma:</span> ${Utils.formatNumber(sum)}`
+            ]);
+          }
+          const { h1, r, d1 } = series.meta;
+          return UI.createFormulaCard('P.H. comparada', [
+            `<span class="dim">Modelo:</span> H<sub>n</sub> = 1/[${Utils.formatNumber(d1)} + (n-1)·${Utils.formatNumber(r)}]`,
+            `<span class="dim">h<sub>1</sub>:</span> ${Utils.formatNumber(h1)}`,
+            `<span class="dim">Termo ${n}:</span> ${Utils.formatNumber(series.values[n - 1])}`
+          ]);
+        });
+
+        const pairLines = [];
+        for (let i = 0; i < compareSeries.length; i++) {
+          for (let j = i + 1; j < compareSeries.length; j++) {
+            const a = compareSeries[i];
+            const b = compareSeries[j];
+            const firstAgtB = a.values.findIndex((v, idx) => v > b.values[idx]);
+            const firstBgtA = b.values.findIndex((v, idx) => v > a.values[idx]);
+            if (firstAgtB === -1 && firstBgtA === -1) pairLines.push(`${a.label} e ${b.label} ficaram equivalentes nos termos gerados.`);
+            else if (firstAgtB !== -1 && firstBgtA === -1) pairLines.push(`${a.label} ficou acima de ${b.label} desde n = ${firstAgtB + 1}.`);
+            else if (firstBgtA !== -1 && firstAgtB === -1) pairLines.push(`${b.label} ficou acima de ${a.label} desde n = ${firstBgtA + 1}.`);
+            else pairLines.push(`${a.label} e ${b.label} alternam liderança ao longo do intervalo observado.`);
+          }
+        }
+        summaryCards.push(UI.createWideCard('Leitura comparativa', pairLines.join(' ')));
+        UI.renderHTML('compareSummary', summaryCards.join(''));
+
+        const lastValues = compareSeries.map(series => ({ label: series.label, value: series.values[n - 1] }));
+        const dominant = lastValues.reduce((best, item) => item.value > best.value ? item : best, lastValues[0]);
+        const amplitudeLast = Math.max(...lastValues.map(item => item.value)) - Math.min(...lastValues.map(item => item.value));
+        UI.renderHTML('compareInsights', [
+          UI.createInsightCard('Modelos selecionados', compareSeries.map(s => s.label).join(' • ')),
+          UI.createInsightCard('Quantidade de termos', String(n)),
+          UI.createInsightCard('Maior no último termo', `${dominant.label} (${Utils.formatNumber(dominant.value)})`),
+          UI.createInsightCard('Amplitude final', Utils.formatNumber(amplitudeLast))
+        ].join(''));
+
+        UI.renderInteractiveTable('compare', 'compareTermsBox', headers, rows);
+        Charts.drawSection('compare', { labels: AppState.compare.labels, series: compareSeries.map(({ label, color, fill, values }) => ({ label, color, fill, values })) });
+        UI.setActiveRow('compare', 0, true);
+        UI.setMessage('compareMessage', `Comparação pronta com <strong>${n} termos</strong> e <strong>${compareSeries.length} progressões</strong>. A tabela agora mostra liderança por termo e amplitude entre os modelos escolhidos.`, 'good');
+      } catch (error) {
+        AppState.compare = { rows: [], headers: [], labels: [], series: [], activeIndex: null, selected: [] };
+        UI.clearRender('compare');
+        UI.setMessage('compareMessage', 'O comparador precisa de entradas numéricas válidas: ' + error.message, 'bad');
+      }
+    }
+  };
+
+  const Quiz = {
+    current: [],
+    previousIds: [],
+    pickQuestions() {
+      const blocked = new Set(Quiz.previousIds);
+      let pool = window.QuestionBank.filter(item => !blocked.has(item.id));
+      if (pool.length < 10) pool = window.QuestionBank.slice();
+      const shuffled = pool.slice().sort(() => Math.random() - 0.5);
+      Quiz.current = shuffled.slice(0, 10);
+      Quiz.previousIds = Quiz.current.map(item => item.id);
+    },
+    render() {
+      Quiz.pickQuestions();
+      const container = document.getElementById('quizGrid');
+      if (!container) return;
+      container.innerHTML = Quiz.current.map((item, idx) => {
+        const options = item.options.map((opt, optIdx) => `<label><input type="radio" name="q${idx}" value="${optIdx}" /> ${opt}</label>`).join('');
+        return `<article class="question-card" id="card${idx}"><h4>${idx + 1}) ${item.q}</h4>${options}<div class="feedback hidden" id="fb${idx}"></div></article>`;
+      }).join('');
+      UI.setMessage('quizScore', 'As 10 perguntas da rodada já foram sorteadas. Marque as alternativas e depois clique em <strong>Corrigir quiz</strong>.');
+    },
+    grade() {
+      let score = 0;
+      Quiz.current.forEach((item, idx) => {
+        const card = document.getElementById('card' + idx);
+        const selected = document.querySelector(`input[name="q${idx}"]:checked`);
+        const feedback = document.getElementById('fb' + idx);
+        card.classList.remove('correct', 'wrong');
+        feedback.classList.remove('hidden');
+        if (selected && Number(selected.value) === item.answer) {
+          score++;
+          card.classList.add('correct');
+          feedback.innerHTML = `<strong>Correta.</strong> ${item.explain}`;
+        } else {
+          card.classList.add('wrong');
+          feedback.innerHTML = `<strong>Incorreta.</strong> Resposta certa: <strong>${item.options[item.answer]}</strong>. ${item.explain}`;
+        }
+      });
+      UI.setMessage('quizScore', `Pontuação: <strong>${score}/10</strong>.`, score >= 8 ? 'good' : score >= 5 ? 'warn' : 'bad');
+    }
+  };
+
+  const Interaction = {
+    applyExampleButtons() {
+      document.querySelectorAll('[data-example]').forEach(button => {
+        button.addEventListener('click', () => {
+          const type = button.getAttribute('data-example');
+          const a1 = button.getAttribute('data-a1');
+          const step = button.getAttribute('data-step');
+          const n = button.getAttribute('data-n');
+          if (type === 'pa') {
+            document.getElementById('pa_a1').value = a1;
+            document.getElementById('pa_r').value = step;
+            document.getElementById('pa_n').value = n;
+            Sections.runPA();
+          } else if (type === 'pg') {
+            document.getElementById('pg_a1').value = a1;
+            document.getElementById('pg_q').value = step;
+            document.getElementById('pg_n').value = n;
+            Sections.runPG();
+          } else if (type === 'ph') {
+            document.getElementById('ph_h1').value = a1;
+            document.getElementById('ph_r').value = step;
+            document.getElementById('ph_n').value = n;
+            Sections.runPH();
+          }
+        });
+      });
+    },
+
+    bindSegmentedControls() {
+      document.querySelectorAll('[data-scale-target]').forEach(button => {
+        button.addEventListener('click', () => {
+          const target = button.getAttribute('data-scale-target');
+          const mode = button.getAttribute('data-scale');
+          AppState.chartSettings[target].scale = mode;
+          document.querySelectorAll(`[data-scale-target="${target}"]`).forEach(node => node.classList.toggle('is-active', node === button));
+          Interaction.rerenderSection(target);
+        });
+      });
+      document.querySelectorAll('[data-type-target]').forEach(button => {
+        button.addEventListener('click', () => {
+          const target = button.getAttribute('data-type-target');
+          const mode = button.getAttribute('data-chart-type');
+          AppState.chartSettings[target].type = mode;
+          document.querySelectorAll(`[data-type-target="${target}"]`).forEach(node => node.classList.toggle('is-active', node === button));
+          Interaction.rerenderSection(target);
+        });
+      });
+    },
+
+    bindCompareSelectors() {
+      ['cmp_show_pa', 'cmp_show_pg', 'cmp_show_ph'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('change', () => {
+          if (AppState.compare.rows.length) Sections.runCompare();
+        });
+      });
+    },
+
+    rerenderSection(sectionKey) {
+      if (sectionKey === 'pa' && AppState.pa.rows.length) Sections.runPA();
+      else if (sectionKey === 'pg' && AppState.pg.rows.length) Sections.runPG();
+      else if (sectionKey === 'ph' && AppState.ph.rows.length) Sections.runPH();
+      else if (sectionKey === 'analysis' && AppState.analysis.kind) Sections.extendAnalysis(document.getElementById('analysis_n').value);
+      else if (sectionKey === 'compare' && AppState.compare.rows.length) Sections.runCompare();
+    },
+
+    bindSearches() {
+      ['pa', 'pg', 'ph', 'analysis', 'compare'].forEach(UI.bindSearch);
+    },
+
+    bindBrazilianDecimals() {
+      const ids = ['pa_a1', 'pa_r', 'pg_a1', 'pg_q', 'ph_h1', 'ph_r', 'cmp_pa_a1', 'cmp_pa_r', 'cmp_pg_a1', 'cmp_pg_q', 'cmp_ph_h1', 'cmp_ph_r'];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.setAttribute('inputmode', 'decimal');
+        el.addEventListener('blur', () => {
+          el.value = Utils.normalizeInputDisplay(el.value);
+        });
+      });
+    }
+  };
+
+  const AppActions = {
+    runPA(forceN) { Sections.runPA(forceN); },
+    runPG(forceN) { Sections.runPG(forceN); },
+    runPH(forceN) { Sections.runPH(forceN); },
+    analyzeManual() { Sections.analyzeManual(); },
+    runCompare(forceN) { Sections.runCompare(forceN); },
+    gradeQuiz() { Quiz.grade(); },
+    resetQuiz() { Quiz.render(); },
+    clearSection(sectionKey) {
+      const ids = {
+        pa: ['pa_a1', 'pa_r', 'pa_n'],
+        pg: ['pg_a1', 'pg_q', 'pg_n'],
+        ph: ['ph_h1', 'ph_r', 'ph_n'],
+        analysis: ['manualTerms', 'analysis_n'],
+        compare: ['cmp_pa_a1', 'cmp_pa_r', 'cmp_pg_a1', 'cmp_pg_q', 'cmp_ph_h1', 'cmp_ph_r', 'cmp_n']
+      }[sectionKey] || [];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (el.tagName === 'TEXTAREA') el.value = '';
+        else if (el.type === 'number') el.value = el.min ? Number(el.min) : '';
+        else el.value = '';
+      });
+      if (sectionKey === 'compare') {
+        document.getElementById('cmp_show_pa').checked = true;
+        document.getElementById('cmp_show_pg').checked = true;
+        document.getElementById('cmp_show_ph').checked = false;
+        AppState.compare = { rows: [], headers: [], labels: [], series: [], activeIndex: null, selected: [] };
+        UI.clearRender('compare');
+        UI.setMessage('compareMessage', 'Campos limpos. Preencha novamente e selecione ao menos duas progressões para comparar.', 'warn');
+      } else if (sectionKey === 'analysis') {
+        AppState.analysis = { rows: [], headers: [], values: [], labels: [], activeIndex: null, kind: null, params: null };
+        UI.clearRender('analysis');
+        UI.setMessage('analysisMessage', 'Campos limpos. Informe pelo menos 3 termos para análise.', 'warn');
+      } else {
+        AppState[sectionKey].rows = [];
+        AppState[sectionKey].headers = [];
+        AppState[sectionKey].values = [];
+        AppState[sectionKey].labels = [];
+        AppState[sectionKey].activeIndex = null;
+        UI.clearRender(sectionKey);
+        UI.setMessage(sectionKey + 'Message', 'Campos limpos. Preencha novamente para gerar a progressão.', 'warn');
+      }
+    },
+    exportSectionCSV(sectionKey) { Exporters.exportSectionCSV(sectionKey); },
+    downloadCanvas(canvasId, filename) { Exporters.downloadCanvas(canvasId, filename); },
+    exportTablePNG(sectionKey, title) { Exporters.exportTablePNG(sectionKey, title); },
+    applyAnalysisExample(kind) {
+      document.getElementById('manualTerms').value = kind === 'pa' ? '4; 7; 10; 13' : '3; 6; 12; 24';
+      Sections.analyzeManual();
+    }
+  };
+
+  window.AppActions = AppActions;
+
+  function init() {
+    Interaction.applyExampleButtons();
+    Interaction.bindSegmentedControls();
+    Interaction.bindCompareSelectors();
+    Interaction.bindSearches();
+    Interaction.bindBrazilianDecimals();
+    Quiz.render();
+    Sections.runPA();
+    Sections.runPG();
+    Sections.runPH();
+    Sections.analyzeManual();
+    Sections.runCompare();
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+
+</script>
+</body>
+</html>
